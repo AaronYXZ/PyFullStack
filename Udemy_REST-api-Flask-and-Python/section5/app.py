@@ -2,7 +2,7 @@ from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from flask_jwt import JWT, jwt_required, current_identity
 
-from security import authenticate, identity
+from .security import authenticate, identity
 
 app = Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS'] = True # To allow flask propagating exception even if debug is set to false on app
@@ -42,7 +42,7 @@ class Item(Resource):
         items = list(filter(lambda x: x['name'] != name, items))
         return {'message': 'Item deleted'}
 
-## PUT
+## PUT 
     @jwt_required()
     def put(self, name):
         data = Item.parser.parse_args()
@@ -63,4 +63,4 @@ api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
 
 if __name__ == '__main__':
-    app.run(port = 5001)  # important to mention debug=True
+    app.run(debug=True)  # important to mention debug=True
