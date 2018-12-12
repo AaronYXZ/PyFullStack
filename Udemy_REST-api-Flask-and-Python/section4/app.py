@@ -5,21 +5,22 @@ from flask_jwt import JWT, jwt_required, current_identity
 from security import authenticate, identity
 
 app = Flask(__name__)
-app.config['PROPAGATE_EXCEPTIONS'] = True # To allow flask propagating exception even if debug is set to false on app
+app.config['PROPAGATE_EXCEPTIONS'] = True  # To allow flask propagating exception even if debug is set to false on app
 app.secret_key = 'jose'
 api = Api(app)
 
-jwt = JWT(app, authenticate, identity) ## auth
+jwt = JWT(app, authenticate, identity)  ## creates new endpoint /auth
 
 items = []
+
 
 class Item(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('price',
-        type=float,
-        required=True,
-        help="This field cannot be left blank!"
-    )
+                        type=float,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
 
     @jwt_required()
     def get(self, name):
@@ -35,14 +36,12 @@ class Item(Resource):
         items.append(item)
         return item
 
-## DELETE
     @jwt_required()
     def delete(self, name):
         global items
         items = list(filter(lambda x: x['name'] != name, items))
         return {'message': 'Item deleted'}
 
-## PUT
     @jwt_required()
     def put(self, name):
         data = Item.parser.parse_args()
@@ -55,12 +54,14 @@ class Item(Resource):
             item.update(data)
         return item
 
+
 class ItemList(Resource):
     def get(self):
         return {'items': items}
+
 
 api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
 
 if __name__ == '__main__':
-    app.run(port = 5001)  # important to mention debug=True
+    app.run(port=5001)  # important to mention debug=True
