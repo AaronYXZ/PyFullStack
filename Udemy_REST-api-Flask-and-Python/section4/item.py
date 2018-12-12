@@ -25,7 +25,7 @@ api.add_resource(Item, '/item/<string:name>') # http://127.0.0.1:5000/student/Cr
 
 
 
-app.run(port=5000)
+app.run(port=5001)
 
 
 
