@@ -8,7 +8,7 @@ create_table_query = "Create table if not exists users (id INTEGER PRIMARY KEY, 
 cursor.execute(create_table_query)
 
 
-create_table_query = "Create table if not exists items (name text, price real)"
+create_table_query = "Create table if not exists items (id INTEGER PRIMARY KEY, name text, price real)"
 cursor.execute(create_table_query)
 
 # cursor.execute("INSERT INTO items VALUES ('test', 10.99)")
