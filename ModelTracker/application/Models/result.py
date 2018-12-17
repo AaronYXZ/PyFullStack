@@ -5,7 +5,7 @@ class ModelResult(db.Model):
     ## referred http://flask-sqlalchemy.pocoo.org/2.3/models/
     __table_name = "results"
     id = db.Column(db.Integer, primary_key=True)
-    model_id = db.Column(db.Integer, db.ForeignKey("models.id"))
+    model_id = db.Column(db.Integer, db.ForeignKey("model_info.id"))
     tag = db.Column(db.String)
     TP = db.Column(db.Integer)
     FP = db.Column(db.Integer)
