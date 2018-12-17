@@ -1,7 +1,7 @@
 from db import db
 
 
-class ResultModel(db.Model):
+class ModelResult(db.Model):
     ## referred http://flask-sqlalchemy.pocoo.org/2.3/models/
     __table_name = "results"
     id = db.Column(db.Integer, primary_key=True)

@@ -4,7 +4,9 @@ from flask import Flask, render_template, session, redirect, url_for, flash
 from flask import request
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
-from itemTable import table_generator
+# from itemTable import table_generator
+from Models.info import ModelInfo
+from Models.result import ModelResult
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
@@ -15,10 +17,15 @@ import pandas as pd
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///data.db"
 
 bootstrap = Bootstrap(app)
 moment = Moment(app)
 
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
 class CV_score_form(FlaskForm):
     modelName = StringField("Models Name [requried]", validators=[DataRequired()])
@@ -29,20 +36,6 @@ class CV_score_form(FlaskForm):
     submit = SubmitField("Submit")
     uploads = FieldList(FileField())
 
-
-
-# @app.route('/')
-# def index():
-#     return render_template('main_template.html')
-
-# @app.route("/")
-# def my_form():
-#     return render_template("my_form.html")
-
-# @app.route("/")
-# def ph():
-#     return "<h1> Place Holder </h1>"
-
 @app.route("/log")
 def log():
     # table = table_generator()
@@ -52,9 +45,6 @@ def log():
 
 @app.route("/model")
 def model():
-    # table = table_generator()
-    # html = "<>"
-    # return table_generator()
     return render_template('model.html')
 
 @app.route("/", methods=["GET", "POST"])
@@ -84,24 +74,29 @@ def my_form_post():
         Recall = data.iloc[0,5]
         F1 = data.iloc[0, 6]
 
-        connection = sqlite3.connect("model.db")
-        cursor = connection.cursor()
 
-        query = "INSERT INTO models VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)"
-        cursor.execute(query, (name, date, version, wholePath, Precision, Recall, F1))
+        info = ModelInfo(name, path, date, version, "ie", "placeholder")
+        info.save_to_db()
 
-        connection.commit()
-        connection.close()
+        # result = ModelResult()
+        # result.save_to_db()
+
+        # connection = sqlite3.connect("model.db")
+        # cursor = connection.cursor()
+        #
+        # query = "INSERT INTO models VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)"
+        # cursor.execute(query, (name, date, version, wholePath, Precision, Recall, F1))
+        #
+        # connection.commit()
+        # connection.close()
 
         form.modelName.data = ''
         form.modelPath.data = ''
         form.modelVersion.data = ''
         form.modelDate.data = ''
-        return render_template('index.html', form=form,  date=date, version=version, path=path, tag=TAG,
-                               precision=Precision)
+        return render_template('index.html', form=form)
 
-    return render_template('index.html', form=form, name=name, date=date, version=version, path=path, tag=TAG,
-                           precision=Precision)
+    return render_template('index.html', form=form)
 
 
 @app.route("/user/<name>")
@@ -118,5 +113,8 @@ def internal_server_error(e):
 def internal_server_error(e):
     return render_template('404.html'), 404
 
-app.run()
+if __name__ == '__main__':
+    from db import db
+    db.init_app(app)
+    app.run(port = 5000)
 # app.run(debug=True)

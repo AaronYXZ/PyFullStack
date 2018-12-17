@@ -1,13 +1,13 @@
 from db import db
 
 
-class ModelModel(db.Model):
+class ModelInfo(db.Model):
     ## referred http://flask-sqlalchemy.pocoo.org/2.3/models/
-    __table_name = "models"
+    # __table_name__ = "models"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
     path = db.Column(db.String, unique=True, nullable=False)
-    date = db.Column(db.DateTime)
+    date = db.Column(db.String)
     version = db.Column(db.String)
     category = db.Column(db.String)
     description = db.Column(db.String)
