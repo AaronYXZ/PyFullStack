@@ -7,9 +7,9 @@ class ModelResult(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     model_id = db.Column(db.Integer, db.ForeignKey("model_info.id"))
     tag = db.Column(db.String)
-    TP = db.Column(db.Integer)
-    FP = db.Column(db.Integer)
-    FN = db.Column(db.Integer)
+    TP = db.Column(db.Numeric) ## Can't use db.Integer, sqlite store as binary b'\x13\x11\x00\x00\x00\x00\x00\x00'
+    FP = db.Column(db.Numeric)
+    FN = db.Column(db.Numeric)
     Precision = db.Column(db.Float(precision=2))
     Recall = db.Column(db.Float(precision=2))
     F1 = db.Column(db.Float(precision=2))

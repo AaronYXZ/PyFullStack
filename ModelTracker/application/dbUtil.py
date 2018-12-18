@@ -2,6 +2,7 @@ from Models.info import ModelInfo
 from Models.result import ModelResult
 import os
 import pandas as pd
+import numpy as np
 
 def saveToDB(form):
     name = form.modelName.data
@@ -28,7 +29,7 @@ def saveToDB(form):
         Precision = data.iloc[i, 4]
         Recall = data.iloc[i, 5]
         F1 = data.iloc[i, 6]
-        modelResult = ModelResult(Tag, TP, FP, FN, Precision, Recall, F1)
+        modelResult = ModelResult(Tag, np.int64(Correct), np.int64(Gold), np.int64(Extracted), Precision, Recall, F1)
         modelResult.save_to_db()
 
 

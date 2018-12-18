@@ -8,6 +8,7 @@ from wtforms import StringField, SubmitField, SelectField, TextAreaField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired
 from dbUtil import saveToDB
+from Models.result import ModelResult
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -42,10 +43,10 @@ class ModelForm(FlaskForm):
 
 @app.route("/log")
 def log():
-    # table = table_generator()
-    # html = "<>"
-    # return table_generator()
-    return render_template('log.html')
+    results = ModelResult.query.all()
+    result1 = results[0]
+    F1 = result1.F1
+    return render_template("log.html", F1 = F1)
 
 
 @app.route("/model")
@@ -77,11 +78,6 @@ def my_form_post():
     return render_template('index.html', form=form)
 
 
-@app.route("/user/<name>")
-def upload(name):
-    return "<h1> hello , {}!</h1>".format(name)
-
-
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('500.html'), 500
@@ -96,5 +92,5 @@ if __name__ == '__main__':
     from db import db
 
     db.init_app(app)
-    app.run(port=5000)
+    app.run(port=5002)
 # app.run(debug=True)
