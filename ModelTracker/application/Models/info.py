@@ -7,7 +7,7 @@ class ModelInfo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
     path = db.Column(db.String, unique=True, nullable=False)
-    date = db.Column(db.String)
+    date = db.Column(db.DateTime)
     version = db.Column(db.String)
     category = db.Column(db.String)
     description = db.Column(db.String)

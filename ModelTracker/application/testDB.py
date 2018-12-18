@@ -13,3 +13,7 @@ rows = cursor.execute(query)
 
 for row in rows:
     print(row)
+
+query = "SELECT * FROM model_result"
+rows = cursor.execute(query)
+print(cursor.fetchall())
