@@ -50,7 +50,7 @@ def log():
 
     rows = []
     for result in results:
-        row = [result.model_info.model_name, result.model_info.date]
+        row = [result.model_info.name, result.model_info.date]
         row.extend(result.to_list())
         rows.append(row)
 

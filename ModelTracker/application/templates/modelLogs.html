@@ -5,7 +5,7 @@
 {% block page_content %}
 
 
-<table style="width:100%">
+<table class="table table-dark table-striped table-bordered">
     <thead>
     <tr>
         {% for col in cols %}
@@ -17,14 +17,17 @@
 
     <tbody>
     {% for row in rows %}
-     <!--Todo-->
+    <!--Todo-->
     <tr>
-        <td>{{row[0]}}</td>
-        {% for value in row[1:4] %}
+        {% for value in row[0:3] %}
+        <td>{{value}}</td>
+        {% endfor %}
+
+        {% for value in row[3:6] %}
         <td>{{value|int}}</td>
         {% endfor %}
 
-        {% for value in row[4:] %}
+        {% for value in row[6:] %}
         <td>{{'%0.2f'| format(value|float * 100)}}%</td>
 
         {% endfor %}
