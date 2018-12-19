@@ -9,6 +9,7 @@ from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired
 from dbUtil import saveToDB
 from Models.result import ModelResult
+from Models.info import ModelInfo
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -43,15 +44,22 @@ class ModelForm(FlaskForm):
 
 @app.route("/log")
 def log():
-    results = ModelResult.query.all()
-    result1 = results[0]
-    F1 = result1.F1
-    return render_template("log.html", F1 = F1)
+    results = ModelResult.query.join(ModelInfo, (ModelResult.model_id == ModelInfo.id)).all()
+    cols = ["Model Name", "Date"]
+    cols.extend(results[0].attri_to_list())
+
+    rows = []
+    for result in results:
+        row = [result.model_info.model_name, result.model_info.date]
+        row.extend(result.to_list())
+        rows.append(row)
+
+    return render_template("modelLogs.html", cols = cols, rows = rows)
 
 
 @app.route("/model")
 def model():
-    return render_template('model.html')
+    return render_template('modelComponent.html')
 
 
 @app.route("/", methods=["GET", "POST"])

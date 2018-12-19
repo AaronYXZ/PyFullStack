@@ -4,6 +4,7 @@ import os
 import pandas as pd
 import numpy as np
 
+
 def saveToDB(form):
     name = form.modelName.data
     date = form.modelDate.data
@@ -11,9 +12,8 @@ def saveToDB(form):
     path = form.modelPath.data
     category = form.modelCategory.data
     description = form.modelDescription.data
-    modelInfo = ModelInfo(name, path, date, version, category, description)
+    modelInfo = ModelInfo(name=name, path=path, date=date, version=version, category=category, description=description)
     modelInfo.save_to_db()
-
 
     wholePath = os.path.join(path, "training/output/avg-evaluation-results.txt")
     data = pd.read_table(wholePath)
@@ -29,10 +29,6 @@ def saveToDB(form):
         Precision = data.iloc[i, 4]
         Recall = data.iloc[i, 5]
         F1 = data.iloc[i, 6]
-        modelResult = ModelResult(Tag, np.int64(Correct), np.int64(Gold), np.int64(Extracted), Precision, Recall, F1)
+        modelResult = ModelResult(Tag=Tag, TP=TP, FP=FP, FN=FN, Precision=Precision, Recall=Recall, F1=F1,
+                                  model_info=modelInfo)
         modelResult.save_to_db()
-
-
-
-
-

@@ -12,13 +12,13 @@ class ModelInfo(db.Model):
     category = db.Column(db.String)
     description = db.Column(db.String)
 
-    def __init__(self, name, path, date, version, category, description):
-        self.name = name
-        self.path = path
-        self.date = date
-        self.version = version
-        self.category = category
-        self.description = description
+    # def __init__(self, name, path, date, version, category, description):
+    #     self.name = name
+    #     self.path = path
+    #     self.date = date
+    #     self.version = version
+    #     self.category = category
+    #     self.description = description
 
     def to_json(self):
         return {"name": self.name, "path": self.path, "date": self.date, "version": self.version,

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Logs{% endblock %}
+
+{% block page_content %}
+
+
+<table style="width:100%">
+    <thead>
+    <tr>
+        {% for col in cols %}
+        <th><b> {{col}} </b></th>
+
+        {% endfor %}
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for row in rows %}
+     <!--Todo-->
+    <tr>
+        <td>{{row[0]}}</td>
+        {% for value in row[1:4] %}
+        <td>{{value|int}}</td>
+        {% endfor %}
+
+        {% for value in row[4:] %}
+        <td>{{'%0.2f'| format(value|float * 100)}}%</td>
+
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
