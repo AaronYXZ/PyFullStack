@@ -25,6 +25,7 @@ def create_tables():
 
 
 class ModelForm(FlaskForm):
+    usecaseName = StringField("Usecase Name")
     modelName = StringField("Model Name [required]", validators=[DataRequired()])
     modelPath = StringField("Output Path [required]", validators=[DataRequired()])
     # modelPath = SearchField("Path")
@@ -75,7 +76,8 @@ def my_form_post():
     if form.validate_on_submit():
         flash("Submission successful!")
         saveToDB(form)
-
+        usecase = form.usecaseName.data
+        form.usecaseName.data = usecase
         form.modelName.data = ''
         form.modelPath.data = ''
         form.modelDescription.data = ''

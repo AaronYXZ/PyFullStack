@@ -6,13 +6,14 @@ import numpy as np
 
 
 def saveToDB(form):
+    usecase = form.usecaseName.data
     name = form.modelName.data
     date = form.modelDate.data
     version = form.modelVersion.data
     path = form.modelPath.data
     category = form.modelCategory.data
     description = form.modelDescription.data
-    modelInfo = ModelInfo(name=name, path=path, date=date, version=version, category=category, description=description)
+    modelInfo = ModelInfo(usecase = usecase ,name=name, path=path, date=date, version=version, category=category, description=description)
     modelInfo.save_to_db()
 
     wholePath = os.path.join(path, "training/output/avg-evaluation-results.txt")
