@@ -13,7 +13,14 @@ def saveToDB(form):
     path = form.modelPath.data
     category = form.modelCategory.data
     description = form.modelDescription.data
-    modelInfo = ModelInfo(usecase = usecase ,name=name, path=path, date=date, version=version, category=category, description=description)
+    savedModelInfo = ModelInfo.find_by_name(name)
+    ## if model name / model path is duplicate (already exists in database, delete and update)
+    # ToDo show a pop up window for user to choose if modle name already exists in db
+    if savedModelInfo:
+        savedModelInfo.delete_from_db()
+
+    modelInfo = ModelInfo(usecase=usecase, name=name, path=path, date=date, version=version, category=category,
+                          description=description)
     modelInfo.save_to_db()
 
     wholePath = os.path.join(path, "training/output/avg-evaluation-results.txt")
@@ -31,5 +38,5 @@ def saveToDB(form):
         Recall = data.iloc[i, 5]
         F1 = data.iloc[i, 6]
         modelResult = ModelResult(Tag=Tag, TP=TP, FP=FP, FN=FN, Precision=Precision, Recall=Recall, F1=F1,
-                                  model_info=modelInfo)
+                              model_info=modelInfo)
         modelResult.save_to_db()

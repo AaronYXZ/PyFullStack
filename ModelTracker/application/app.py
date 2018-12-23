@@ -25,17 +25,19 @@ def create_tables():
 
 
 class ModelForm(FlaskForm):
-    usecaseName = StringField("Usecase Name")
-    modelName = StringField("Model Name [required]", validators=[DataRequired()])
+    usecaseName = StringField("Usecase Name")  ## look in the path, if not provided, accept user input
+    modelName = StringField("Model Name",
+                            validators=[DataRequired()])  ## look in the path, if not provided, accept user input
     modelPath = StringField("Output Path [required]", validators=[DataRequired()])
     # modelPath = SearchField("Path")
     modelDate = DateField('Development Date', format='%Y-%m-%d')
     modelCategory = SelectField("Category",
                                 choices=[('IE', "Information Extraction"), ("CLASS", "Classification"),
                                          ("OTHER", "Other")])
-    modelVersion = SelectField("ML SDK Version",
-                               choices=[('9.2', "9.2"), ("9.1", "9.1"),
-                                        ("9.0", "9.0"), ("8.5", "8.5"), ("8.3", "8.3")])
+    modelVersion = StringField("ML SDK Version")
+    # modelVersion = SelectField("ML SDK Version",
+    #                            choices=[('9.2', "9.2"), ("9.1", "9.1"),
+    #                                     ("9.0", "9.0"), ("8.5", "8.5"), ("8.3", "8.3")])
     # model
     # upload = FileField()
     modelDescription = TextAreaField("Description")
@@ -55,7 +57,7 @@ def log():
         row.extend(result.to_list())
         rows.append(row)
 
-    return render_template("modelLogs.html", cols = cols, rows = rows)
+    return render_template("modelLogs.html", cols=cols, rows=rows)
 
 
 @app.route("/model")

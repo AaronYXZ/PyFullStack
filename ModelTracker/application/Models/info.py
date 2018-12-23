@@ -6,7 +6,7 @@ class ModelInfo(db.Model):
     # __table_name__ = "models"
     id = db.Column(db.Integer, primary_key=True)
     usecase = db.Column(db.String(80))
-    name = db.Column(db.String(80), unique=True, nullable=False)
+    name = db.Column(db.String(80), unique=True)
     path = db.Column(db.String, unique=True, nullable=False)
     date = db.Column(db.DateTime)
     version = db.Column(db.String)
