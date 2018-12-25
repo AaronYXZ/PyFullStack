@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+{% for result in results %}
+<div> <button class="btn btn-outline-primary" data-toggle="collapse" data-target="#demo">{{ result.model_info.name }}</button></div>
+<div id="demo-{{loop.index}}" class="collapse">
+{{ result.model_info.F1 }}
+</div>
+{% endfor %}
+{% endblock %}

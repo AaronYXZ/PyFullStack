@@ -7,9 +7,9 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, TextAreaField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired
-from dbUtil import saveToDB
-from Models.result import ModelResult
-from Models.info import ModelInfo
+from dbUtil import saveToDB, saveUsecaseToDB
+from Models.trainResult import TrainResult
+from Models.modelInfo import ModelInfo
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -45,9 +45,19 @@ class ModelForm(FlaskForm):
     submit = SubmitField("Submit")
 
 
+class UsecaseForm(FlaskForm):
+    usecaseName = StringField("Usecase Name")  ## look in the path, if not provided, accept user input
+    modelDate = DateField('Development Date', format='%Y-%m-%d')
+    modelCategory = SelectField("Category",
+                                choices=[('IE', "Information Extraction"), ("CLASS", "Classification"),
+                                         ("OTHER", "Other")])
+    modelDescription = TextAreaField("Description")
+
+    submit = SubmitField("Submit")
+
 @app.route("/log")
 def log():
-    results = ModelResult.query.join(ModelInfo, (ModelResult.model_id == ModelInfo.id)).all()
+    results = TrainResult.query.join(ModelInfo, (TrainResult.model_id == ModelInfo.id)).all()
     cols = ["Model Name", "Date"]
     cols.extend(results[0].attri_to_list())
 
@@ -64,6 +74,27 @@ def log():
 def model():
     return render_template('modelComponent.html')
 
+
+@app.route("/usecase")
+def usecase():
+    return render_template('usecase.html')
+
+@app.route("/usecase/create")
+def usecaseCreate():
+    form = UsecaseForm
+    if form.validate_on_submit():
+        flash("Submission successful!")
+        saveUsecaseToDB(form)
+        usecase = form.usecaseName.data
+        form.usecaseName.data = usecase
+        form.modelName.data = ''
+        form.modelPath.data = ''
+        form.modelDescription.data = ''
+        form.modelVersion.data = ''
+        form.modelDate.data = ''
+        return render_template('usecaseCreate.html', form=form)
+
+    return render_template('usecaseCreate.html', form = form)
 
 @app.route("/", methods=["GET", "POST"])
 def my_form_post():
@@ -99,6 +130,10 @@ def internal_server_error(e):
 def internal_server_error(e):
     return render_template('404.html'), 404
 
+@app.route("/coll")
+def coll():
+    results = TrainResult.query.join(ModelInfo, (TrainResult.model_id == ModelInfo.id)).all()
+    return render_template("collapsible.html", results = results)
 
 if __name__ == '__main__':
     from db import db

@@ -1,11 +1,12 @@
 {% extends "bootstrap/base.html" %}
 
-{% block title %}Flasky{% endblock %}
+{% block title %}Model Tracking System{% endblock %}
 
 {% block head %}
 {{ super() }}
 <link rel="shortcut icon" href="{{ url_for('static', filename='wf.ico') }}" type="image/x-icon">
 <link rel="icon" href="{{ url_for('static', filename='wf.ico') }}" type="image/x-icon">
+
 
 
 {% endblock %}
@@ -20,10 +21,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <!--<a class="navbar-brand" href="/">Flasky</a>-->
             <a class="navbar-brand" href="/">Log New Model</a>
         </div>
         <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <!--<li><a href="/">Home</a></li>-->
+                <li><a href="/usecase">Usecase</a></li>
+
+            </ul>
             <ul class="nav navbar-nav">
                 <!--<li><a href="/">Home</a></li>-->
                 <li><a href="/log">Log</a></li>
