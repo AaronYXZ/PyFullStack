@@ -70,7 +70,7 @@ def model():
     return render_template('modelComponent.html')
 
 
-@app.route("/usecase")
+@app.route("/")
 def usecase():
     usecases = UsecaseInfo.query.all()
     return render_template('usecase.html', usecases=usecases)
@@ -117,29 +117,6 @@ def showModel(usecaseName):
     return render_template('usecaseShowModel.html', models=models)
 
 
-@app.route("/", methods=["GET", "POST"])
-def homePage():
-    # name = None
-    # date = None
-    # version = None
-    # path = None
-    # TAG = None
-    # Precision = None
-    # uploads = None
-    form = ModelForm()
-    if form.validate_on_submit():
-        flash("Submission successful!")
-        saveToDB(form)
-        usecase = form.usecaseName.data
-        form.usecaseName.data = usecase
-        form.modelName.data = ''
-        form.modelPath.data = ''
-        form.modelDescription.data = ''
-        form.modelVersion.data = ''
-        form.modelDate.data = ''
-        return render_template('index.html', form=form)
-
-    return render_template('index.html', form=form)
 
 
 @app.errorhandler(500)
