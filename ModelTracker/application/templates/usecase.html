@@ -6,37 +6,32 @@
 {% block page_content %}
 
 <div class="row">
-    <div class="col-sm-6">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title display-4">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Cras justo odio</li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                </ul>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
-    </div>
+    {% for usecase in usecases%}
+
     <div class="col-sm-6">
         <div class="card">
             <div class="card-header">
-                Featured
+                Planning / In Progress / Done
             </div>
             <div class="card-body">
-                <h5 class="card-title display-4">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <h5 class="card-title display-4">{{usecase.usecaseName}}</h5>
+                <p class="card-text">{{usecase.usecaseDescription}}</p>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Cras justo odio</li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
+                    <li class="list-group-item">Create Date: {{usecase.usecaseDate}}</li>
+                    <li class="list-group-item">Category: {% if usecase.usecaseCategory == "IE" %}
+                        Information Extraction
+                        {% elif usecase.usecaseCategory == "CLASS" %}
+                        Classification
+                        {% else %}
+                        usecase.usecaseCategory
+                        {% endif %}
+                    </li>
                 </ul>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <a href="/usecase/{{usecase.usecaseName}}" class="btn btn-primary">See models</a>
             </div>
         </div>
     </div>
+    {% endfor%}
 
     <br>
     <br>
@@ -51,7 +46,7 @@
                 <!--https://www.w3schools.com/bootstrap4/bootstrap_typography.asp-->
                 <p class="card-text"></p>
 
-                <a href="/usecase/new" class="btn btn-primary">Create</a>
+                <a href="/usecase/create" class="btn btn-primary">Create</a>
             </div>
         </div>
     </div>

@@ -10,6 +10,7 @@ from wtforms.validators import DataRequired
 from dbUtil import saveToDB, saveUsecaseToDB
 from Models.trainResult import TrainResult
 from Models.modelInfo import ModelInfo
+from Models.usecaseInfo import UsecaseInfo
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -47,11 +48,11 @@ class ModelForm(FlaskForm):
 
 class UsecaseForm(FlaskForm):
     usecaseName = StringField("Usecase Name")  ## look in the path, if not provided, accept user input
-    modelDate = DateField('Development Date', format='%Y-%m-%d')
-    modelCategory = SelectField("Category",
+    usecaseDate = DateField('Create Date', format='%Y-%m-%d')
+    usecaseCategory = SelectField("Category",
                                 choices=[('IE', "Information Extraction"), ("CLASS", "Classification"),
                                          ("OTHER", "Other")])
-    modelDescription = TextAreaField("Description")
+    usecaseDescription = TextAreaField("Description")
 
     submit = SubmitField("Submit")
 
@@ -77,27 +78,26 @@ def model():
 
 @app.route("/usecase")
 def usecase():
-    return render_template('usecase.html')
+    usecases = UsecaseInfo.query.all()
+    return render_template('usecase.html', usecases = usecases)
 
-@app.route("/usecase/create")
+@app.route("/usecase/create",  methods=["GET", "POST"])
 def usecaseCreate():
-    form = UsecaseForm
+    form = UsecaseForm()
     if form.validate_on_submit():
+
         flash("Submission successful!")
         saveUsecaseToDB(form)
-        usecase = form.usecaseName.data
-        form.usecaseName.data = usecase
-        form.modelName.data = ''
-        form.modelPath.data = ''
-        form.modelDescription.data = ''
-        form.modelVersion.data = ''
-        form.modelDate.data = ''
-        return render_template('usecaseCreate.html', form=form)
+        form.usecaseName.data = ""
+        form.usecaseDescription.data = ''
+        form.usecaseDate.data = ''
+        form.usecaseCategory.data = ''
+        return render_template('usecase.html')
 
     return render_template('usecaseCreate.html', form = form)
 
 @app.route("/", methods=["GET", "POST"])
-def my_form_post():
+def homePage():
     # name = None
     # date = None
     # version = None

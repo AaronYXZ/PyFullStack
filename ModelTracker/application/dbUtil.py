@@ -32,11 +32,12 @@ def saveToDB(form):
 
 
 def saveUsecaseToDB(form):
-    usecase = form.usecase.data
-    date = form.date.data
-    category = form.category.data
-    description = form.description.data
-    usecaseInfo = UsecaseInfo(usecase=usecase, date=date, category=category, description=description)
+    usecaseName = form.usecaseName.data
+    usecaseDate = form.usecaseDate.data
+    usecaseCategory = form.usecaseCategory.data
+    usecaseDescription = form.usecaseDescription.data
+    usecaseInfo = UsecaseInfo(usecaseName=usecaseName, usecaseDate=usecaseDate, usecaseCategory=usecaseCategory,
+                              usecaseDescription=usecaseDescription)
     usecaseInfo.save_to_db()
 
 

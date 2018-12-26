@@ -5,13 +5,13 @@ class UsecaseInfo(db.Model):
     ## referred http://flask-sqlalchemy.pocoo.org/2.3/models/
     # __table_name__ = "models"
     id = db.Column(db.Integer, primary_key=True)
-    usecase = db.Column(db.String(80))
+    usecaseName = db.Column(db.String(80))
     # name = db.Column(db.String(80), unique=True)
     # path = db.Column(db.String, unique=True, nullable=False)
-    date = db.Column(db.DateTime)
+    usecaseDate = db.Column(db.DateTime)
     # version = db.Column(db.String)
-    category = db.Column(db.String)
-    description = db.Column(db.String)
+    usecaseCategory = db.Column(db.String)
+    usecaseDescription = db.Column(db.String)
 
     # def __init__(self, name, path, date, version, category, description):
     #     self.name = name

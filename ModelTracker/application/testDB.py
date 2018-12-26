@@ -21,3 +21,7 @@ print(cursor.fetchall())
 query = "SELECT * FROM test_result"
 rows = cursor.execute(query)
 print(cursor.fetchall())
+
+query = "SELECT * FROM usecase_info"
+rows = cursor.execute(query)
+print(cursor.fetchall())
