@@ -11,6 +11,7 @@ from dbUtil import saveToDB, saveUsecaseToDB
 from Models.trainResult import TrainResult
 from Models.modelInfo import ModelInfo
 from Models.usecaseInfo import UsecaseInfo
+from Models.testResult import TestResult
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Workfusion123'
@@ -114,7 +115,9 @@ def logModel(usecaseName):
 @app.route("/usecase/<string:usecaseName>/ShowModel")
 def showModel(usecaseName):
     models = ModelInfo.query.join(UsecaseInfo, (UsecaseInfo.id == ModelInfo.usecase_id)).filter(UsecaseInfo.usecaseName==usecaseName).all()
-    return render_template('usecaseShowModel.html', models=models)
+    trainResults = TrainResult.query.join(ModelInfo, (TrainResult.model_id == ModelInfo.id)).filter(ModelInfo.name == usecaseName).all()
+    testResults= TestResult.query.join(ModelInfo, (TestResult.model_id == ModelInfo.id)).filter(ModelInfo.name == usecaseName).all()
+    return render_template('usecaseShowModel.html', models=models, trainResults = trainResults, testResults = testResults)
 
 
 

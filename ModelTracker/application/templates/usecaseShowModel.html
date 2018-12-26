@@ -7,12 +7,92 @@
 <div class="page-header">
     <h1>Here is all your models</h1>
 </div>
-{% for model in models %}
 
-{{model.usecase_info.usecaseName}}
-{{model.name}}
 
-{% endfor %}
+<!--https://stackoverflow.com/questions/36915220/bootstrap-nested-collapsable-panels-->
+
+<div class="lf-container container">
+    {% for model in models %}
+
+    <!-- Root accordian -->
+    <div class="panel-group" id="{{model.name}}">
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <a class="panel-toggle" data-toggle="collapse" data-parent="#{{model.name}}" href="#{{model.name}}_result">
+                        {{model.name}}
+                    </a>
+                </h2>
+            </div>
+
+            <div id="{{model.name}}_result" class="panel-body collapse">
+                <div class="panel-inner">
+
+
+                    <div class="panel-group" id="{model.name}_train">
+                        <div class="panel panel-default">
+
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a class="panel-toggle" data-toggle="collapse" data-parent="#accordion{{model.id}}"
+                                       href="#{{model.name}}_train_result">
+                                        TrainResults
+
+                                        {{}}
+                                    </a>
+                                </h4>
+                            </div>
+
+
+                            <!-- Here we insert another nested accordion -->
+                            <div id="{{model.name}}_train_result" class="panel-body collapse">
+                                <div class="panel-inner">
+                                    <h4> Text </h4>
+
+
+                                </div>
+                            </div>
+                            <!-- Inner accordion ends here -->
+
+                        </div>
+                    </div>
+
+                    <div class="panel-group" id="accordion{{model.id}}">
+                        <div class="panel panel-default">
+
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a class="panel-toggle" data-toggle="collapse" data-parent="#accordion{{model.id}}"
+                                       href="#{{model.name}}_test_result">
+                                        TestResults
+                                    </a>
+                                </h4>
+                            </div>
+
+
+                            <div id="{{model.name}}_test_result" class="panel-body collapse">
+                                <div class="panel-inner">
+                                    <h4> Text </h4>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Root accordian ends here -->
+
+    {% endfor%}
+
+</div><!-- /lf-container -->
+
 
 {% endblock %}
 

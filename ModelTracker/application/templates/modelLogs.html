@@ -5,9 +5,8 @@
 {% block head%}
 {{super()}}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/jquery.dataTables.min.css"/>
-<script type ="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<script type ="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
 
 {% endblock%}
@@ -45,14 +44,144 @@
 </table>
 
 
+<!--https://stackoverflow.com/questions/36915220/bootstrap-nested-collapsable-panels-->
+<div class="lf-container container">
+
+    <!-- Root accordian -->
+    <div class="panel-group" id="accordionYear">
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="panel-toggle" data-toggle="collapse" data-parent="#accordionYear" href="#collapseJune">
+                        2014
+                    </a>
+                </h4>
+            </div>
+
+            <!-- Here we insert another nested accordion -->
+            <div id="collapseJune" class="panel-body collapse">
+                <div class="panel-inner">
+
+
+                    <div class="panel-group" id="accordionJune">
+                        <div class="panel panel-default">
+
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a class="panel-toggle" data-toggle="collapse" data-parent="#accordionJune"
+                                       href="#collapseDay">
+                                        June
+                                    </a>
+                                </h4>
+                            </div>
+
+                            <!-- Here we insert another nested accordion -->
+                            <div id="collapseDay" class="panel-body collapse">
+                                <div class="panel-inner">
+
+                                    <div class="panel-group" id="accordionJune">
+                                        <div class="panel panel-default">
+
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a class="panel-toggle" data-toggle="collapse"
+                                                       data-parent="#accordionDay" href="#collapseForm">
+                                                        2nd (Monday)
+                                                    </a>
+                                                </h4>
+                                            </div>
+
+                                            <div id="collapseForm" class="panel-body collapse">
+                                                <div class="panel-inner">
+
+                                                    <form action="">
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <h4>Step 1:</h4>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group">
+                                                                    <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <input type="checkbox">
+                                            </span>
+                                                                        <p class="form-control">Long description text
+                                                                            text text text text text text text text text
+                                                                            text text text text text...</p>
+                                                                        <table id="example"
+                                                                               class="table table-dark table-striped table-bordered">
+                                                                            <thead>
+                                                                            <tr>
+                                                                                {% for col in cols %}
+                                                                                <th><b> {{col}} </b></th>
+
+                                                                                {% endfor %}
+                                                                            </tr>
+                                                                            </thead>
+
+                                                                            <tbody>
+                                                                            {% for row in rows %}
+                                                                            <tr>
+                                                                                {% for value in row[0:3] %}
+                                                                                <td>{{value}}</td>
+                                                                                {% endfor %}
+
+                                                                                {% for value in row[3:6] %}
+                                                                                <td>{{value|int}}</td>
+                                                                                {% endfor %}
+
+                                                                                {% for value in row[6:] %}
+                                                                                <td>{{'%0.2f'| format(value|float *
+                                                                                    100)}}%
+                                                                                </td>
+
+                                                                                {% endfor %}
+                                                                            </tr>
+                                                                            {% endfor %}
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- Inner accordion ends here -->
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Inner accordion ends here -->
+
+        </div>
+    </div>
+    <!-- Root accordian ends here -->
+
+</div><!-- /lf-container -->
+
 {% endblock %}
 
 {% block scripts %}
-<script type ="text/javascript" class="init">
+<script type="text/javascript" class="init">
 
 $(document).ready( function () {
     $('#example').DataTable();
 } );
+
 
 </script>
 {{ super() }}

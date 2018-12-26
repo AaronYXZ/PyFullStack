@@ -1,5 +1,11 @@
 {% extends "bootstrap/base.html" %}
 
+{% block styles %}
+{{super()}}
+<link rel="stylesheet"
+      href="{{url_for('.static', filename='demo.css')}}">
+{% endblock %}
+
 {% block title %}Model Tracking System{% endblock %}
 
 {% block head %}
