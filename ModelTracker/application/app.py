@@ -13,7 +13,7 @@ from Models.modelInfo import ModelInfo
 from Models.usecaseInfo import UsecaseInfo
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'hard to guess string'
+app.config['SECRET_KEY'] = 'Workfusion123'
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///data.db"
 
 bootstrap = Bootstrap(app)
@@ -26,21 +26,14 @@ def create_tables():
 
 
 class ModelForm(FlaskForm):
-    usecaseName = StringField("Usecase Name")  ## look in the path, if not provided, accept user input
     modelName = StringField("Model Name",
                             validators=[DataRequired()])  ## look in the path, if not provided, accept user input
     modelPath = StringField("Output Path [required]", validators=[DataRequired()])
-    # modelPath = SearchField("Path")
     modelDate = DateField('Development Date', format='%Y-%m-%d')
-    modelCategory = SelectField("Category",
-                                choices=[('IE', "Information Extraction"), ("CLASS", "Classification"),
-                                         ("OTHER", "Other")])
     modelVersion = StringField("ML SDK Version")
     # modelVersion = SelectField("ML SDK Version",
     #                            choices=[('9.2', "9.2"), ("9.1", "9.1"),
     #                                     ("9.0", "9.0"), ("8.5", "8.5"), ("8.3", "8.3")])
-    # model
-    # upload = FileField()
     modelDescription = TextAreaField("Description")
 
     submit = SubmitField("Submit")
@@ -50,11 +43,12 @@ class UsecaseForm(FlaskForm):
     usecaseName = StringField("Usecase Name")  ## look in the path, if not provided, accept user input
     usecaseDate = DateField('Create Date', format='%Y-%m-%d')
     usecaseCategory = SelectField("Category",
-                                choices=[('IE', "Information Extraction"), ("CLASS", "Classification"),
-                                         ("OTHER", "Other")])
+                                  choices=[('IE', "Information Extraction"), ("CLASS", "Classification"),
+                                           ("OTHER", "Other")])
     usecaseDescription = TextAreaField("Description")
 
     submit = SubmitField("Submit")
+
 
 @app.route("/log")
 def log():
@@ -79,13 +73,13 @@ def model():
 @app.route("/usecase")
 def usecase():
     usecases = UsecaseInfo.query.all()
-    return render_template('usecase.html', usecases = usecases)
+    return render_template('usecase.html', usecases=usecases)
 
-@app.route("/usecase/create",  methods=["GET", "POST"])
+
+@app.route("/usecase/create", methods=["GET", "POST"])
 def usecaseCreate():
     form = UsecaseForm()
     if form.validate_on_submit():
-
         flash("Submission successful!")
         saveUsecaseToDB(form)
         form.usecaseName.data = ""
@@ -94,7 +88,34 @@ def usecaseCreate():
         form.usecaseCategory.data = ''
         return render_template('usecase.html')
 
-    return render_template('usecaseCreate.html', form = form)
+    return render_template('usecaseCreate.html', form=form)
+
+
+@app.route("/usecase/<string:usecaseName>/LogModel", methods=["GET", "POST"])
+def logModel(usecaseName):
+    # models = UsecaseInfo.query.join(UsecaseInfo, (UsecaseInfo.id == ModelInfo.usecase_id)).filter_by(
+    #     UsecaseInfo.usecaseName == usecaseName).all()
+    form = ModelForm()
+    if form.validate_on_submit():
+        flash("Submission successful!")
+        saveToDB(form)
+        usecase = form.usecaseName.data
+        form.usecaseName.data = usecase
+        form.modelName.data = ''
+        form.modelPath.data = ''
+        form.modelDescription.data = ''
+        form.modelVersion.data = ''
+        form.modelDate.data = ''
+        return render_template('usecaseLogModel.html', form=form)
+
+    return render_template('usecaseLogModel.html', form=form)
+
+@app.route("/usecase/<string:usecaseName>/ShowModel")
+def showModel(usecaseName):
+    # models = UsecaseInfo.query.join(UsecaseInfo, (UsecaseInfo.id == ModelInfo.usecase_id)).filter_by(
+    #     UsecaseInfo.usecaseName == usecaseName).all()
+    return render_template('usecaseShowModel.html')
+
 
 @app.route("/", methods=["GET", "POST"])
 def homePage():
@@ -130,10 +151,12 @@ def internal_server_error(e):
 def internal_server_error(e):
     return render_template('404.html'), 404
 
+
 @app.route("/coll")
 def coll():
     results = TrainResult.query.join(ModelInfo, (TrainResult.model_id == ModelInfo.id)).all()
-    return render_template("collapsible.html", results = results)
+    return render_template("collapsible.html", results=results)
+
 
 if __name__ == '__main__':
     from db import db

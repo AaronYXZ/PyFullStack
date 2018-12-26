@@ -5,7 +5,9 @@ class ModelInfo(db.Model):
     ## referred http://flask-sqlalchemy.pocoo.org/2.3/models/
     # __table_name__ = "models"
     id = db.Column(db.Integer, primary_key=True)
-    usecase = db.Column(db.String(80))
+    usecase_id = db.Column(db.Integer, db.ForeignKey("usecase_info.id"))
+    usecaseName = db.relationship('UsecaseInfo',
+                                 backref=db.backref('usecase_info', lazy=True))
     name = db.Column(db.String(80), unique=True)
     path = db.Column(db.String, unique=True, nullable=False)
     date = db.Column(db.DateTime)
