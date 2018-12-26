@@ -7,8 +7,12 @@
 <div class="page-header">
     <h1>Here is all your models</h1>
 </div>
-<!--{% for model in models %}-->
-<!--{% endfor %}-->
+{% for model in models %}
+
+{{model.usecase_info.usecaseName}}
+{{model.name}}
+
+{% endfor %}
 
 {% endblock %}
 

@@ -17,7 +17,7 @@ for row in rows:
 query = "SELECT * FROM train_result"
 rows = cursor.execute(query)
 print(cursor.fetchall())
-
+#
 query = "SELECT * FROM test_result"
 rows = cursor.execute(query)
 print(cursor.fetchall())

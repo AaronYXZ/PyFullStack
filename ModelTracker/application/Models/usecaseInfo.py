@@ -26,8 +26,8 @@ class UsecaseInfo(db.Model):
     #             "category": self.category, "description": self.description}
 
     @classmethod
-    def find_by_name(cls, usecase):
-        return cls.query.filter_by(usecase=usecase).first()
+    def find_by_name(cls, usecaseName):
+        return cls.query.filter_by(usecaseName=usecaseName).first()
 
     def save_to_db(self):
         db.session.add(self)

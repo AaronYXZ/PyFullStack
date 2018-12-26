@@ -7,13 +7,12 @@ import pandas as pd
 import numpy as np
 
 
-def saveToDB(form):
-    usecase = form.usecaseName.data
+def saveToDB(form, usecase_info):
+    # usecase = form.usecaseName.data
     name = form.modelName.data
     date = form.modelDate.data
     version = form.modelVersion.data
     path = form.modelPath.data
-    category = form.modelCategory.data
     description = form.modelDescription.data
     savedModelInfo = ModelInfo.find_by_name(name)
     ## if model name / model path is duplicate (already exists in database, delete and update)
@@ -21,8 +20,8 @@ def saveToDB(form):
     if savedModelInfo:
         savedModelInfo.delete_from_db()
 
-    modelInfo = ModelInfo(usecase=usecase, name=name, path=path, date=date, version=version, category=category,
-                          description=description)
+    modelInfo = ModelInfo( name=name, path=path, date=date, version=version,
+                          description=description, usecase_info = usecase_info)
     modelInfo.save_to_db()
 
     trainPath = os.path.join(path, "training/output/avg-evaluation-results.txt")

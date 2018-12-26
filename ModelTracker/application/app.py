@@ -95,12 +95,12 @@ def usecaseCreate():
 def logModel(usecaseName):
     # models = UsecaseInfo.query.join(UsecaseInfo, (UsecaseInfo.id == ModelInfo.usecase_id)).filter_by(
     #     UsecaseInfo.usecaseName == usecaseName).all()
+    usecaseInfo = UsecaseInfo.find_by_name(usecaseName)
     form = ModelForm()
     if form.validate_on_submit():
         flash("Submission successful!")
-        saveToDB(form)
-        usecase = form.usecaseName.data
-        form.usecaseName.data = usecase
+
+        saveToDB(form, usecaseInfo)
         form.modelName.data = ''
         form.modelPath.data = ''
         form.modelDescription.data = ''
@@ -110,11 +110,11 @@ def logModel(usecaseName):
 
     return render_template('usecaseLogModel.html', form=form)
 
+
 @app.route("/usecase/<string:usecaseName>/ShowModel")
 def showModel(usecaseName):
-    # models = UsecaseInfo.query.join(UsecaseInfo, (UsecaseInfo.id == ModelInfo.usecase_id)).filter_by(
-    #     UsecaseInfo.usecaseName == usecaseName).all()
-    return render_template('usecaseShowModel.html')
+    models = ModelInfo.query.join(UsecaseInfo, (UsecaseInfo.id == ModelInfo.usecase_id)).filter(UsecaseInfo.usecaseName==usecaseName).all()
+    return render_template('usecaseShowModel.html', models=models)
 
 
 @app.route("/", methods=["GET", "POST"])
