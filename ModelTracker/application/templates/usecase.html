@@ -17,14 +17,14 @@
                 <h2 class="card-title display-4">{{usecase.usecaseName}}</h2>
                 <p class="card-text">{{usecase.usecaseDescription}}</p>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Create Date: {{usecase.usecaseDate.strftime('%Y-%m-%d')}}</li>
-                    <li class="list-group-item">Category: {% if usecase.usecaseCategory == "IE" %}
+                    <li class="list-group-item">Create Date: <b>{{usecase.usecaseDate.strftime('%Y-%m-%d')}}</b></li>
+                    <li class="list-group-item">Category: <b>{% if usecase.usecaseCategory == "IE" %}
                         Information Extraction
                         {% elif usecase.usecaseCategory == "CLASS" %}
                         Classification
                         {% else %}
                         usecase.usecaseCategory
-                        {% endif %}
+                        {% endif %}</b>
                     </li>
                 </ul>
                 <a href="/usecase/{{usecase.usecaseName}}/LogModel" class="btn btn-info">Log Model</a>
@@ -48,7 +48,7 @@
                 <!--https://www.w3schools.com/bootstrap4/bootstrap_typography.asp-->
                 <p class="card-text"></p>
 
-                <a href="/usecase/create" class="btn btn-primary">Create</a>
+                <a href="/usecase/create" class="btn btn-success">Create</a>
             </div>
         </div>
     </div>
