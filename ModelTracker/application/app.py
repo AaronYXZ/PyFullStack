@@ -114,9 +114,10 @@ def logModel(usecaseName):
 
 @app.route("/usecase/<string:usecaseName>/ShowModel")
 def showModel(usecaseName):
+    ## https://blog.zengrong.net/post/2656.html
     models = ModelInfo.query.join(UsecaseInfo, (UsecaseInfo.id == ModelInfo.usecase_id)).filter(UsecaseInfo.usecaseName==usecaseName).all()
-    trainResults = TrainResult.query.join(ModelInfo, (TrainResult.model_id == ModelInfo.id)).filter(ModelInfo.name == usecaseName).all()
-    testResults= TestResult.query.join(ModelInfo, (TestResult.model_id == ModelInfo.id)).filter(ModelInfo.name == usecaseName).all()
+    trainResults = TrainResult.query.join(ModelInfo, (TrainResult.model_id == ModelInfo.id)).join(UsecaseInfo, (ModelInfo.usecase_id == UsecaseInfo.id)).filter(UsecaseInfo.usecaseName == usecaseName).all()
+    testResults= TestResult.query.join(ModelInfo, (TestResult.model_id == ModelInfo.id)).join(UsecaseInfo, (ModelInfo.usecase_id == UsecaseInfo.id)).filter(UsecaseInfo.usecaseName == usecaseName).all()
     return render_template('usecaseShowModel.html', models=models, trainResults = trainResults, testResults = testResults)
 
 

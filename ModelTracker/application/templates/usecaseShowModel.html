@@ -20,7 +20,8 @@
 
             <div class="panel-heading">
                 <h2 class="panel-title">
-                    <a class="panel-toggle" data-toggle="collapse" data-parent="#{{model.name}}" href="#{{model.name}}_result">
+                    <a class="panel-toggle" data-toggle="collapse" data-parent="#{{model.name}}"
+                       href="#{{model.name}}_result">
                         {{model.name}}
                     </a>
                 </h2>
@@ -39,17 +40,39 @@
                                        href="#{{model.name}}_train_result">
                                         TrainResults
 
-                                        {{}}
                                     </a>
                                 </h4>
                             </div>
 
 
-                            <!-- Here we insert another nested accordion -->
                             <div id="{{model.name}}_train_result" class="panel-body collapse">
                                 <div class="panel-inner">
                                     <h4> Text </h4>
+                                    <table id="{{model.name}}_train"
+                                           class="table table-dark table-striped table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <td>Field</td>
+                                            <td>Precision</td>
+                                            <td>Recall</td>
+                                            <td>F1</td>
+                                        </tr>
+                                        </thead>
 
+                                        <tbody>
+                                        {% for trainResult in trainResults %}
+                                        {% if trainResult.model_info.name == model.name %}
+                                        <tr>
+                                            <td>{{trainResult.Field}}</td>
+                                            <td>{{trainResult.Precision}}</td>
+                                            <td>{{trainResult.Recall}}</td>
+                                            <td>{{trainResult.F1}}</td>
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
 
                                 </div>
                             </div>
