@@ -9,15 +9,15 @@
     {% for usecase in usecases%}
 
     <div class="col-sm-6">
-        <div class="card">
-            <div class="card-header">
-                Planning / In Progress / Done
-            </div>
+        <div class="card border-primary mb-3">
+            <!--<div class="card-header">-->
+                <!--Planning / In Progress / Done-->
+            <!--</div>-->
             <div class="card-body">
-                <h5 class="card-title display-4">{{usecase.usecaseName}}</h5>
+                <h2 class="card-title display-4">{{usecase.usecaseName}}</h2>
                 <p class="card-text">{{usecase.usecaseDescription}}</p>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Create Date: {{usecase.usecaseDate}}</li>
+                    <li class="list-group-item">Create Date: {{usecase.usecaseDate.strftime('%Y-%m-%d')}}</li>
                     <li class="list-group-item">Category: {% if usecase.usecaseCategory == "IE" %}
                         Information Extraction
                         {% elif usecase.usecaseCategory == "CLASS" %}
@@ -27,8 +27,8 @@
                         {% endif %}
                     </li>
                 </ul>
-                <a href="/usecase/{{usecase.usecaseName}}/LogModel" class="btn btn-info btn-lg">Log Model</a>
-                <a href="/usecase/{{usecase.usecaseName}}/ShowModel" class="btn btn-info btn-lg">See Model</a>
+                <a href="/usecase/{{usecase.usecaseName}}/LogModel" class="btn btn-info">Log Model</a>
+                <a href="/usecase/{{usecase.usecaseName}}/ShowModel" class="btn btn-info">See Model</a>
 
             </div>
         </div>
@@ -39,12 +39,12 @@
     <br>
     <div class="col-sm-6">
         <div class="card">
-            <div class="card-header">
-                Planning / In Progress / Done
+            <!--<div class="card-header">-->
+                <!--Planning / In Progress / Done-->
 
-            </div>
+            <!--</div>-->
             <div class="card-body">
-                <h5 class="card-title display-4">New Usecase</h5>
+                <h2 class="card-title display-4">New Usecase</h2>
                 <!--https://www.w3schools.com/bootstrap4/bootstrap_typography.asp-->
                 <p class="card-text"></p>
 

@@ -22,15 +22,20 @@
                 <h2 class="panel-title">
                     <a class="panel-toggle" data-toggle="collapse" data-parent="#{{model.name}}"
                        href="#{{model.name}}_result">
-                        Model: {{model.name}}
+                        <h3> Model: {{model.name}} </h3>
                     </a>
                 </h2>
             </div>
 
+
             <div id="{{model.name}}_result" class="panel-body collapse">
                 <div class="panel-inner">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Create Date: {{model.date.strftime('%Y-%m-%d')}}</li>
+                        <li class="list-group-item">Version: {{model.version}}</li>
+                        <li class="list-group-item">{{model.description}}</li>
 
-
+                    </ul>
                     <div class="panel-group" id="{model.name}_train">
                         <div class="panel panel-default">
 
@@ -47,7 +52,7 @@
 
                             <div id="{{model.name}}_train_result" class="panel-body collapse">
                                 <div class="panel-inner">
-                                    <h4> Text </h4>
+
                                     <table id="{{model.name}}_train"
                                            class="table table-dark table-striped table-bordered">
                                         <thead>
@@ -103,7 +108,7 @@
                             <div id="{{model.name}}_test_result" class="panel-body collapse">
                                 <div class="panel-inner">
                                     <h4> Text </h4>
-<table id="{{model.name}}_train"
+                                    <table id="{{model.name}}_train"
                                            class="table table-dark table-striped table-bordered">
                                         <thead>
                                         <tr>
