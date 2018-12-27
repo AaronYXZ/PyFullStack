@@ -10,8 +10,8 @@
 
 Strucutre:
     application 
-        --- Models
-        --- static
+        <space><space><space> Models
+        <space><space><space> static
         --- templates
         app.py
         data.db
