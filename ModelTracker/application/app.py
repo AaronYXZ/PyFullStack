@@ -26,9 +26,6 @@ def create_tables():
     db.create_all()
 
 
-
-
-
 class UsecaseForm(FlaskForm):
     usecaseName = StringField("Usecase Name")  ## look in the path, if not provided, accept user input
     usecaseDate = DateField('Create Date', format='%Y-%m-%d')
@@ -52,20 +49,6 @@ class ModelForm(FlaskForm):
     modelDescription = TextAreaField("Description")
 
     submit = SubmitField("Submit")
-
-@app.route("/log")
-def log():
-    results = TrainResult.query.join(ModelInfo, (TrainResult.model_id == ModelInfo.id)).all()
-    cols = ["Model Name", "Date"]
-    cols.extend(results[0].attri_to_list())
-
-    rows = []
-    for result in results:
-        row = [result.model_info.name, result.model_info.date]
-        row.extend(result.to_list())
-        rows.append(row)
-
-    return render_template("modelLogs.html", cols=cols, rows=rows)
 
 
 @app.route("/model")
@@ -117,12 +100,13 @@ def logModel(usecaseName):
 @app.route("/usecase/<string:usecaseName>/ShowModel")
 def showModel(usecaseName):
     ## https://blog.zengrong.net/post/2656.html
-    models = ModelInfo.query.join(UsecaseInfo, (UsecaseInfo.id == ModelInfo.usecase_id)).filter(UsecaseInfo.usecaseName==usecaseName).all()
-    trainResults = TrainResult.query.join(ModelInfo, (TrainResult.model_id == ModelInfo.id)).join(UsecaseInfo, (ModelInfo.usecase_id == UsecaseInfo.id)).filter(UsecaseInfo.usecaseName == usecaseName).all()
-    testResults= TestResult.query.join(ModelInfo, (TestResult.model_id == ModelInfo.id)).join(UsecaseInfo, (ModelInfo.usecase_id == UsecaseInfo.id)).filter(UsecaseInfo.usecaseName == usecaseName).all()
-    return render_template('usecaseShowModel.html', models=models, trainResults = trainResults, testResults = testResults)
-
-
+    models = ModelInfo.query.join(UsecaseInfo, (UsecaseInfo.id == ModelInfo.usecase_id)).filter(
+        UsecaseInfo.usecaseName == usecaseName).all()
+    trainResults = TrainResult.query.join(ModelInfo, (TrainResult.model_id == ModelInfo.id)).join(UsecaseInfo, (
+                ModelInfo.usecase_id == UsecaseInfo.id)).filter(UsecaseInfo.usecaseName == usecaseName).all()
+    testResults = TestResult.query.join(ModelInfo, (TestResult.model_id == ModelInfo.id)).join(UsecaseInfo, (
+                ModelInfo.usecase_id == UsecaseInfo.id)).filter(UsecaseInfo.usecaseName == usecaseName).all()
+    return render_template('usecaseShowModel.html', models=models, trainResults=trainResults, testResults=testResults)
 
 
 @app.errorhandler(500)
@@ -133,12 +117,6 @@ def internal_server_error(e):
 @app.errorhandler(404)
 def internal_server_error(e):
     return render_template('404.html'), 404
-
-
-@app.route("/coll")
-def coll():
-    results = TrainResult.query.join(ModelInfo, (TrainResult.model_id == ModelInfo.id)).all()
-    return render_template("collapsible.html", results=results)
 
 
 if __name__ == '__main__':
