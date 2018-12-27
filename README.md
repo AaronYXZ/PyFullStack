@@ -9,9 +9,9 @@
 
 ### Model Strucutre:
     application
-    
-        <space><space><space> Models
-        <space><space><space> static
+ 
+        --- Models
+        --- static
         --- templates
         app.py
         data.db
