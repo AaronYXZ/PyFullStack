@@ -26,18 +26,7 @@ def create_tables():
     db.create_all()
 
 
-class ModelForm(FlaskForm):
-    modelName = StringField("Model Name",
-                            validators=[DataRequired()])  ## look in the path, if not provided, accept user input
-    modelPath = StringField("Output Path [required]", validators=[DataRequired()])
-    modelDate = DateField('Development Date', format='%Y-%m-%d')
-    modelVersion = StringField("ML SDK Version")
-    # modelVersion = SelectField("ML SDK Version",
-    #                            choices=[('9.2', "9.2"), ("9.1", "9.1"),
-    #                                     ("9.0", "9.0"), ("8.5", "8.5"), ("8.3", "8.3")])
-    modelDescription = TextAreaField("Description")
 
-    submit = SubmitField("Submit")
 
 
 class UsecaseForm(FlaskForm):
@@ -50,6 +39,19 @@ class UsecaseForm(FlaskForm):
 
     submit = SubmitField("Submit")
 
+
+class ModelForm(FlaskForm):
+    modelName = StringField("Model Name",
+                            validators=[DataRequired()])  ## look in the path, if not provided, accept user input
+    modelPath = StringField("Output Path [required]", validators=[DataRequired()])
+    modelDate = DateField('Development Date', format='%Y-%m-%d')
+    modelVersion = StringField("ML SDK Version")
+    # modelVersion = SelectField("ML SDK Version",
+    #                            choices=[('9.2', "9.2"), ("9.1", "9.1"),
+    #                                     ("9.0", "9.0"), ("8.5", "8.5"), ("8.3", "8.3")])
+    modelDescription = TextAreaField("Description")
+
+    submit = SubmitField("Submit")
 
 @app.route("/log")
 def log():
