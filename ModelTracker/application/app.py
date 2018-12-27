@@ -1,6 +1,6 @@
 # from itemTable import table_generator
 import os
-from flask import Flask, render_template, flash
+from flask import Flask, render_template, flash, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_wtf import FlaskForm
@@ -72,7 +72,8 @@ def usecaseCreate():
         form.usecaseDescription.data = ''
         form.usecaseDate.data = ''
         form.usecaseCategory.data = ''
-        return render_template('usecase.html')
+        # return render_template('usecase.html')
+        return redirect(url_for("usecase"))  ## Flask Web Development P81
 
     return render_template('usecaseCreate.html', form=form)
 
@@ -92,7 +93,8 @@ def logModel(usecaseName):
         form.modelDescription.data = ''
         form.modelVersion.data = ''
         form.modelDate.data = ''
-        return render_template('usecaseLogModel.html', form=form)
+        return redirect(url_for("showModel", usecaseName = usecaseName))
+        # return render_template("usecaseLogModel.html", form=form)
 
     return render_template('usecaseLogModel.html', form=form)
 
@@ -102,11 +104,15 @@ def showModel(usecaseName):
     ## https://blog.zengrong.net/post/2656.html
     models = ModelInfo.query.join(UsecaseInfo, (UsecaseInfo.id == ModelInfo.usecase_id)).filter(
         UsecaseInfo.usecaseName == usecaseName).all()
-    trainResults = TrainResult.query.join(ModelInfo, (TrainResult.model_id == ModelInfo.id)).join(UsecaseInfo, (
+    if len(models) == 0:
+        return render_template("usecaseNoModel.html", usecaseName=usecaseName)
+    else:
+        trainResults = TrainResult.query.join(ModelInfo, (TrainResult.model_id == ModelInfo.id)).join(UsecaseInfo, (
                 ModelInfo.usecase_id == UsecaseInfo.id)).filter(UsecaseInfo.usecaseName == usecaseName).all()
-    testResults = TestResult.query.join(ModelInfo, (TestResult.model_id == ModelInfo.id)).join(UsecaseInfo, (
+        testResults = TestResult.query.join(ModelInfo, (TestResult.model_id == ModelInfo.id)).join(UsecaseInfo, (
                 ModelInfo.usecase_id == UsecaseInfo.id)).filter(UsecaseInfo.usecaseName == usecaseName).all()
-    return render_template('usecaseShowModel.html', models=models, trainResults=trainResults, testResults=testResults)
+        return render_template('usecaseShowModel.html', models=models, trainResults=trainResults,
+                               testResults=testResults)
 
 
 @app.errorhandler(500)
