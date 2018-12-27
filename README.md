@@ -6,10 +6,10 @@
     navigate to the folder of /ModelTracker/application
     in the terminal execuate: python app.py 
     
-### Contact Aaron ayu@workfusion.com for more details
 
-Strucutre:
-    application 
+### Model Strucutre:
+    application
+    
         <space><space><space> Models
         <space><space><space> static
         --- templates
@@ -17,4 +17,5 @@ Strucutre:
         data.db
         db.py
         dbUtil.py
-    
+ #### Contact Aaron ayu@workfusion.com for more details
+  
