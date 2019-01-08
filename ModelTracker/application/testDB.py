@@ -14,14 +14,14 @@ rows = cursor.execute(query)
 for row in rows:
     print(row)
 
-# query = "SELECT * FROM train_result"
-# rows = cursor.execute(query)
-# print(cursor.fetchall())
+query = "SELECT * FROM train_result"
+rows = cursor.execute(query)
+print(cursor.fetchall())
 #
 query = "SELECT * FROM test_result"
 rows = cursor.execute(query)
 print(cursor.fetchall())
 
-# query = "SELECT * FROM usecase_info"
-# rows = cursor.execute(query)
-# print(cursor.fetchall())
+query = "SELECT * FROM usecase_info"
+rows = cursor.execute(query)
+print(cursor.fetchall())
