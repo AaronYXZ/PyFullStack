@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+
+{% block title %}Usecase Models{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h2>Models developed for {{models[0].usecase_info.usecaseName}}</h2>
+</div>
+
+
+<!--https://stackoverflow.com/questions/36915220/bootstrap-nested-collapsable-panels-->
+
+<div class="lf-container container">
+    {% for model in models %}
+
+    <!-- Root accordian -->
+    <div class="panel-group" id="{{model.name}}">
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <a class="panel-toggle" data-toggle="collapse" data-parent="#{{model.name}}"
+                       href="#{{model.name}}_result">
+                        <h3> Model: {{model.name}} </h3>
+
+                    </a>
+                </h2>
+            </div>
+
+            <div id="{{model.name}}_result" class="panel-body collapse">
+                <div class="panel-inner">
+                    <!--<ul class="list-group list-group-flush">-->
+                    <ul class="list-inline list-group-flush">
+                        <!--https://stackoverflow.com/questions/10906341/how-to-display-a-list-inline-using-twitters-bootstrap list item inline-->
+                        <li class="list-inline-item">Create Date: {{model.date.strftime('%Y-%m-%d')}}</li>
+                        <li class="list-inline-item">Version: {{model.version}}</li>
+                        <li class="list-inline-item">{{model.description}}</li>
+
+                        <a class="btn btn-large btn-primary" data-toggle="confirmation"
+                           data-title="Are you sure you want to delete"
+                        >Delete Model</a>
+                    </ul>
+                    <div class="panel-group" id="{model.name}_train">
+                        <div class="panel panel-default">
+
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a class="panel-toggle" data-toggle="collapse" data-parent="#accordion{{model.id}}"
+                                       href="#{{model.name}}_train_result">
+                                        TrainResults
+
+                                    </a>
+                                </h4>
+                            </div>
+
+
+                            <div id="{{model.name}}_train_result" class="panel-body collapse">
+                                <div class="panel-inner">
+
+                                    <table id="{{model.name}}_train"
+                                           class="table table-dark table-striped table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <td>Field</td>
+                                            <td>TP</td>
+                                            <td>FP</td>
+                                            <td>FN</td>
+                                            <td>Precision</td>
+                                            <td>Recall</td>
+                                            <td>F1</td>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        {% for trainResult in trainResults %}
+                                        {% if trainResult.model_info.name == model.name %}
+                                        <tr>
+                                            <td>{{trainResult.Field}}</td>
+                                            <td>{{trainResult.TP|int}}</td>
+                                            <td>{{trainResult.FP|int}}</td>
+                                            <td>{{trainResult.FN|int}}</td>
+                                            <td>{{ '%0.2f'| format(trainResult.Precision|float * 100)}}</td>
+                                            <td>{{ '%0.2f'| format(trainResult.Recall|float * 100)}}</td>
+                                            <td>{{ '%0.2f'| format(trainResult.F1|float * 100)}}</td>
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                            <!-- Inner accordion ends here -->
+
+                        </div>
+                    </div>
+
+                    <div class="panel-group" id="accordion{{model.id}}">
+                        <div class="panel panel-default">
+
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a class="panel-toggle" data-toggle="collapse" data-parent="#accordion{{model.id}}"
+                                       href="#{{model.name}}_test_result">
+                                        TestResults
+                                    </a>
+                                </h4>
+                            </div>
+
+
+                            <div id="{{model.name}}_test_result" class="panel-body collapse">
+                                <div class="panel-inner">
+                                    <h4> Text </h4>
+                                    <table id="{{model.name}}_train"
+                                           class="table table-dark table-striped table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <td>Field</td>
+                                            <td>TP</td>
+                                            <td>FP</td>
+                                            <td>FN</td>
+                                            <td>Precision</td>
+                                            <td>Recall</td>
+                                            <td>F1</td>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        {% for testResult in testResults %}
+                                        {% if testResult.model_info.name == model.name %}
+                                        <tr>
+                                            <td>{{testResult.Field}}</td>
+                                            <td>{{testResult.TP|int}}</td>
+                                            <td>{{testResult.FP|int}}</td>
+                                            <td>{{testResult.FN|int}}</td>
+                                            <td>{{ '%0.2f'| format(testResult.Precision|float * 100)}}</td>
+                                            <td>{{ '%0.2f'| format(testResult.Recall|float * 100)}}</td>
+                                            <td>{{ '%0.2f'| format(testResult.F1|float * 100)}}</td>
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Root accordian ends here -->
+    <script>$(document).ready( function () {
+    $('#{{model.name}}_train').DataTable();
+} );
+
+    </script>
+
+    {% endfor%}
+
+</div><!-- /lf-container -->
+
+
+{% endblock %}
+
+
+

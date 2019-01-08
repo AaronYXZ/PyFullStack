@@ -1,14 +1,15 @@
 from db import db
 
 
-class ModelResult(db.Model):
+class TestResult(db.Model):
     ## referred http://flask-sqlalchemy.pocoo.org/2.3/models/
-    __table_name__ = "results"
+    __table_name__ = "test_results"
     id = db.Column(db.Integer, primary_key=True)
+    result_name = db.Column(db.String)
     model_id = db.Column(db.Integer, db.ForeignKey("model_info.id"))
     model_info = db.relationship('ModelInfo',
-                               backref=db.backref('models', lazy=True))
-    Tag = db.Column(db.String)
+                               backref=db.backref('test_models', lazy=True))
+    Field = db.Column(db.String)
     TP = db.Column(db.Numeric)  ## Can't use db.Integer, sqlite store as binary b'\x13\x11\x00\x00\x00\x00\x00\x00'
     FP = db.Column(db.Numeric)
     FN = db.Column(db.Numeric)
@@ -26,7 +27,7 @@ class ModelResult(db.Model):
     #     self.F1 = F1
 
     def to_json(self):
-        return {"Tag": self.Tag, "TP": self.TP, "FP": self.FP, "FN": self.FN,
+        return {"Field": self.Field, "TP": self.TP, "FP": self.FP, "FN": self.FN,
                 "Precision": self.Precision, "Recall": self.Recall, "F1": self.F1}
 
     @classmethod
@@ -34,10 +35,10 @@ class ModelResult(db.Model):
         return cls.query.filter_by(name=name).first()
 
     def attri_to_list(self):
-        return ["Tag", "TP", "FP", "FN", "Precision", "Recall", "F1"]
+        return ["Field", "TP", "FP", "FN", "Precision", "Recall", "F1"]
 
     def to_list(self):
-        return [self.Tag, self.TP, self.FP, self.FN, self.Precision, self.Recall, self.F1]
+        return [self.Field, self.TP, self.FP, self.FN, self.Precision, self.Recall, self.F1]
 
     def save_to_db(self):
         db.session.add(self)

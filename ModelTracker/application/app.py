@@ -1,19 +1,24 @@
 # from itemTable import table_generator
 import os
-from flask import Flask, render_template, flash
+from flask import Flask, render_template, flash, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_moment import Momentfk
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, TextAreaField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired
-from dbUtil import saveToDB
-from Models.result import ModelResult
-from Models.info import ModelInfo
+from dbUtil import saveToDB, saveUsecaseToDB
+from Models.trainResult import TrainResult
+from Models.modelInfo import ModelInfo
+from Models.usecaseInfo import UsecaseInfo
+from Models.testResult import TestResult
+from datetime import timedelta
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'hard to guess string'
+app.config['SECRET_KEY'] = 'Workfusion123'
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///data.db"
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(seconds=1)
 
 bootstrap = Bootstrap(app)
 moment = Moment(app)
@@ -24,40 +29,29 @@ def create_tables():
     db.create_all()
 
 
-class ModelForm(FlaskForm):
+class UsecaseForm(FlaskForm):
     usecaseName = StringField("Usecase Name")  ## look in the path, if not provided, accept user input
-    modelName = StringField("Model Name",
-                            validators=[DataRequired()])  ## look in the path, if not provided, accept user input
-    modelPath = StringField("Output Path [required]", validators=[DataRequired()])
-    # modelPath = SearchField("Path")
-    modelDate = DateField('Development Date', format='%Y-%m-%d')
-    modelCategory = SelectField("Category",
-                                choices=[('IE', "Information Extraction"), ("CLASS", "Classification"),
-                                         ("OTHER", "Other")])
-    modelVersion = StringField("ML SDK Version")
-    # modelVersion = SelectField("ML SDK Version",
-    #                            choices=[('9.2', "9.2"), ("9.1", "9.1"),
-    #                                     ("9.0", "9.0"), ("8.5", "8.5"), ("8.3", "8.3")])
-    # model
-    # upload = FileField()
-    modelDescription = TextAreaField("Description")
+    usecaseDate = DateField('Create Date', format='%Y-%m-%d')
+    usecaseCategory = SelectField("Category",
+                                  choices=[('IE', "Information Extraction"), ("CLASS", "Classification"),
+                                           ("OTHER", "Other")])
+    usecaseDescription = TextAreaField("Description")
 
     submit = SubmitField("Submit")
 
 
-@app.route("/log")
-def log():
-    results = ModelResult.query.join(ModelInfo, (ModelResult.model_id == ModelInfo.id)).all()
-    cols = ["Model Name", "Date"]
-    cols.extend(results[0].attri_to_list())
+class ModelForm(FlaskForm):
+    modelName = StringField("Model Name",
+                            validators=[DataRequired()])  ## look in the path, if not provided, accept user input
+    modelPath = StringField("Output Path [required]", validators=[DataRequired()])
+    modelDate = DateField('Development Date', format='%Y-%m-%d')
+    modelVersion = StringField("ML SDK Version")
+    # modelVersion = SelectField("ML SDK Version",
+    #                            choices=[('9.2', "9.2"), ("9.1", "9.1"),
+    #                                     ("9.0", "9.0"), ("8.5", "8.5"), ("8.3", "8.3")])
+    modelDescription = TextAreaField("Description")
 
-    rows = []
-    for result in results:
-        row = [result.model_info.name, result.model_info.date]
-        row.extend(result.to_list())
-        rows.append(row)
-
-    return render_template("modelLogs.html", cols=cols, rows=rows)
+    submit = SubmitField("Submit")
 
 
 @app.route("/model")
@@ -65,29 +59,63 @@ def model():
     return render_template('modelComponent.html')
 
 
-@app.route("/", methods=["GET", "POST"])
-def my_form_post():
-    # name = None
-    # date = None
-    # version = None
-    # path = None
-    # TAG = None
-    # Precision = None
-    # uploads = None
+@app.route("/")
+def usecase():
+    usecases = UsecaseInfo.query.all()
+    return render_template('usecase.html', usecases=usecases)
+
+
+@app.route("/usecase/create", methods=["GET", "POST"])
+def usecaseCreate():
+    form = UsecaseForm()
+    if form.validate_on_submit():
+        flash("Submission successful!")
+        saveUsecaseToDB(form)
+        form.usecaseName.data = ""
+        form.usecaseDescription.data = ''
+        form.usecaseDate.data = ''
+        form.usecaseCategory.data = ''
+        # return render_template('usecase.html')
+        return redirect(url_for("usecase"))  ## Flask Web Development P81
+
+    return render_template('usecaseCreate.html', form=form)
+
+
+@app.route("/usecase/<string:usecaseName>/LogModel", methods=["GET", "POST"])
+def logModel(usecaseName):
+    # models = UsecaseInfo.query.join(UsecaseInfo, (UsecaseInfo.id == ModelInfo.usecase_id)).filter_by(
+    #     UsecaseInfo.usecaseName == usecaseName).all()
+    usecaseInfo = UsecaseInfo.find_by_name(usecaseName)
     form = ModelForm()
     if form.validate_on_submit():
         flash("Submission successful!")
-        saveToDB(form)
-        usecase = form.usecaseName.data
-        form.usecaseName.data = usecase
+
+        saveToDB(form, usecaseInfo)
         form.modelName.data = ''
         form.modelPath.data = ''
         form.modelDescription.data = ''
         form.modelVersion.data = ''
         form.modelDate.data = ''
-        return render_template('index.html', form=form)
+        return redirect(url_for("showModel", usecaseName = usecaseName))
+        # return render_template("usecaseLogModel.html", form=form)
 
-    return render_template('index.html', form=form)
+    return render_template('usecaseLogModel.html', form=form)
+
+
+@app.route("/usecase/<string:usecaseName>/ShowModel")
+def showModel(usecaseName):
+    ## https://blog.zengrong.net/post/2656.html
+    models = ModelInfo.query.join(UsecaseInfo, (UsecaseInfo.id == ModelInfo.usecase_id)).filter(
+        UsecaseInfo.usecaseName == usecaseName).all()
+    if len(models) == 0:
+        return render_template("usecaseNoModel.html", usecaseName=usecaseName)
+    else:
+        trainResults = TrainResult.query.join(ModelInfo, (TrainResult.model_id == ModelInfo.id)).join(UsecaseInfo, (
+                ModelInfo.usecase_id == UsecaseInfo.id)).filter(UsecaseInfo.usecaseName == usecaseName).all()
+        testResults = TestResult.query.join(ModelInfo, (TestResult.model_id == ModelInfo.id)).join(UsecaseInfo, (
+                ModelInfo.usecase_id == UsecaseInfo.id)).filter(UsecaseInfo.usecaseName == usecaseName).all()
+        return render_template('usecaseShowModel.html', models=models, trainResults=trainResults,
+                               testResults=testResults)
 
 
 @app.errorhandler(500)
@@ -99,6 +127,22 @@ def internal_server_error(e):
 def internal_server_error(e):
     return render_template('404.html'), 404
 
+
+@app.route("/test")
+def test():
+    return render_template('test.html')
+
+
+
+@app.route("/test2")
+def test2():
+    return render_template('test_extendBase.html')
+
+# @app.route('/delete', methods=['POST'])
+# def delete_model():
+#     g.db.execute('delete from movies where movie = ?', [request.form['movie_to_delete']])
+#     g.db.commit()
+#     return redirect(url_for('list_movies'))
 
 if __name__ == '__main__':
     from db import db

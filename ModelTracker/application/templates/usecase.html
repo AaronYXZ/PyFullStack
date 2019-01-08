@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Usecases{% endblock %}
+
+
+{% block page_content %}
+
+<div class="row">
+    {% for usecase in usecases%}
+
+    <div class="col-sm-6">
+        <div class="card border-primary mb-3">
+            <!--<div class="card-header">-->
+                <!--Planning / In Progress / Done-->
+            <!--</div>-->
+            <div class="card-body">
+                <h2 class="card-title display-4">{{usecase.usecaseName}}</h2>
+                <p class="card-text">{{usecase.usecaseDescription}}</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Create Date: <b>{{usecase.usecaseDate.strftime('%Y-%m-%d')}}</b></li>
+                    <li class="list-group-item">Category: <b>{% if usecase.usecaseCategory == "IE" %}
+                        Information Extraction
+                        {% elif usecase.usecaseCategory == "CLASS" %}
+                        Classification
+                        {% else %}
+                        usecase.usecaseCategory
+                        {% endif %}</b>
+                    </li>
+                </ul>
+                <a href="/usecase/{{usecase.usecaseName}}/LogModel" class="btn btn-info">Log Model</a>
+                <a href="/usecase/{{usecase.usecaseName}}/ShowModel" class="btn btn-info">See Model</a>
+
+            </div>
+        </div>
+    </div>
+    {% endfor%}
+
+    <br>
+    <br>
+    <div class="col-sm-6">
+        <div class="card">
+            <!--<div class="card-header">-->
+                <!--Planning / In Progress / Done-->
+
+            <!--</div>-->
+            <div class="card-body">
+                <h2 class="card-title display-4">New Usecase</h2>
+                <!--https://www.w3schools.com/bootstrap4/bootstrap_typography.asp-->
+                <p class="card-text"></p>
+
+                <a href="/usecase/create" class="btn btn-success">Create</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+</script>
+
+{% endblock %}
+
