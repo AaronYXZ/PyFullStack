@@ -3,7 +3,8 @@
 {% block styles %}
 {{super()}}
 <link rel="stylesheet"
-      href="{{url_for('.static', filename='demo.css')}}">
+      href="{{url_for('static', filename='main.css')}}">
+
 {% endblock %}
 
 {% block title %}Model Tracking System{% endblock %}
@@ -12,8 +13,12 @@
 {{ super() }}
 <link rel="shortcut icon" href="{{ url_for('static', filename='wf.ico') }}" type="image/x-icon">
 <link rel="icon" href="{{ url_for('static', filename='wf.ico') }}" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 
+<script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 
 {% endblock %}
 
@@ -36,7 +41,7 @@
 
             </ul>
             <!--<ul class="nav navbar-nav">-->
-                <!--<li><a href="/log">Log</a></li>-->
+            <!--<li><a href="/log">Log</a></li>-->
             <!--</ul>-->
         </div>
     </div>
@@ -60,5 +65,9 @@
 {% block scripts %}
 {{ super() }}
 {{ moment.include_moment() }}
-
+<script>
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+</script>
 {% endblock %}

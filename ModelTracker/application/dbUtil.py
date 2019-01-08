@@ -79,3 +79,4 @@ def saveTest(testpath, modelInfo):
                                         Recall=Recall, F1=F1,
                                         model_info=modelInfo)
                 testResult.save_to_db()
+# def deleteModelFromDB(modelInfo):

@@ -23,18 +23,23 @@
                     <a class="panel-toggle" data-toggle="collapse" data-parent="#{{model.name}}"
                        href="#{{model.name}}_result">
                         <h3> Model: {{model.name}} </h3>
+
                     </a>
                 </h2>
             </div>
 
-
             <div id="{{model.name}}_result" class="panel-body collapse">
                 <div class="panel-inner">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Create Date: {{model.date.strftime('%Y-%m-%d')}}</li>
-                        <li class="list-group-item">Version: {{model.version}}</li>
-                        <li class="list-group-item">{{model.description}}</li>
+                    <!--<ul class="list-group list-group-flush">-->
+                    <ul class="list-inline list-group-flush">
+                        <!--https://stackoverflow.com/questions/10906341/how-to-display-a-list-inline-using-twitters-bootstrap list item inline-->
+                        <li class="list-inline-item">Create Date: {{model.date.strftime('%Y-%m-%d')}}</li>
+                        <li class="list-inline-item">Version: {{model.version}}</li>
+                        <li class="list-inline-item">{{model.description}}</li>
 
+                        <a class="btn btn-large btn-primary" data-toggle="confirmation"
+                           data-title="Are you sure you want to delete"
+                        >Delete Model</a>
                     </ul>
                     <div class="panel-group" id="{model.name}_train">
                         <div class="panel panel-default">
@@ -152,6 +157,11 @@
         </div>
     </div>
     <!-- Root accordian ends here -->
+    <script>$(document).ready( function () {
+    $('#{{model.name}}_train').DataTable();
+} );
+
+    </script>
 
     {% endfor%}
 
@@ -159,4 +169,6 @@
 
 
 {% endblock %}
+
+
 

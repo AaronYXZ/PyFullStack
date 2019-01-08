@@ -12,10 +12,13 @@ from Models.trainResult import TrainResult
 from Models.modelInfo import ModelInfo
 from Models.usecaseInfo import UsecaseInfo
 from Models.testResult import TestResult
+from datetime import timedelta
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Workfusion123'
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///data.db"
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(seconds=1)
 
 bootstrap = Bootstrap(app)
 moment = Moment(app)
@@ -124,6 +127,22 @@ def internal_server_error(e):
 def internal_server_error(e):
     return render_template('404.html'), 404
 
+
+@app.route("/test")
+def test():
+    return render_template('test.html')
+
+
+
+@app.route("/test2")
+def test2():
+    return render_template('test_extendBase.html')
+
+# @app.route('/delete', methods=['POST'])
+# def delete_model():
+#     g.db.execute('delete from movies where movie = ?', [request.form['movie_to_delete']])
+#     g.db.commit()
+#     return redirect(url_for('list_movies'))
 
 if __name__ == '__main__':
     from db import db
