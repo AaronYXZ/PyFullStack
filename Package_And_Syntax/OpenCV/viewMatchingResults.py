@@ -4,6 +4,7 @@ import fnmatch
 import cv2
 from Helper.Util import annotate, crop
 
+
 if __name__ == '__main__':
     pathImg = "/Users/aaronyu/Desktop/Project14_Image/surface-based-samples/other/canvas"
     pathTemplate = "/Users/aaronyu/Desktop/Project14_Image/surface-based-samples/other/fragment"
