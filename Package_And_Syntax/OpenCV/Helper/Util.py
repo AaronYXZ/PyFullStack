@@ -3,15 +3,23 @@ import yaml
 import numpy as np
 import os
 import fnmatch
+from GTframe import GTFrame
 
 
 def getBB(yml):
+    """
+
+    :param yml: yml file with ground truth coordinates and color-similiarty
+    :return: list of GTframe objects for the input yml
+    """
     try:
         with open(yml) as tmp:
             tmpDict = yaml.load(tmp)
-        matched_lst = tmpDict['matches']
-        m = [[(int(x['left']), int(x['top'])), (int(x['right']), int(x['bottom']))] for x in matched_lst]
-        return m
+        lst = []
+        for dict in tmpDict['matches']:
+            gt_frame = GTFrame(dict['left'], dict['top'], dict['right'], dict['bottom'], dict['color-similarity'])
+            lst.append(gt_frame)
+        return lst
     except FileNotFoundError:
         return []
 
@@ -34,9 +42,10 @@ def getCrop(img_file, template_file, thresh=0.8, method = cv2.TM_CCOEFF_NORMED):
 def annotate(img, yml, color, thickness):
     img_rgb = cv2.imread(img)
     img_name = img.split("/")[-1].split(".")[0] + "_annotated.png"
-    m = getBB(yml)
-    for cor in m:
-        cv2.rectangle(img_rgb, cor[0], cor[1], color, thickness=thickness)
+    lst = getBB(yml)
+    for gt_frame in lst:
+        cv2.rectangle(img_rgb, (gt_frame.get_left, gt_frame.get_top), (gt_frame.get_right, gt_frame.get_bottom),
+                      color, thickness=thickness)
     cv2.imwrite(os.path.join("resources/AnnotateResults", img_name), img_rgb)
 
 
@@ -73,9 +82,10 @@ def annotateAndCrop(allPath, threshold = 0.8, color_annotate = (0,255,0), color_
         ymlFile = os.path.join(allYmlPath, img.replace("png", "yml"))
         templateFile = os.path.join(allTemplatePath, img)
         img_rgb = cv2.imread(imgFile)
-        m = getBB(ymlFile)
-        for cor in m:
-            cv2.rectangle(img_rgb, cor[0], cor[1], color_annotate, thickness=thickness_annotate)
+        lst = getBB(ymlFile)
+        for gt_frame in lst:
+            cv2.rectangle(img_rgb, (gt_frame.get_left, gt_frame.get_top), (gt_frame.get_right, gt_frame.get_bottom),
+                          color_annotate, thickness=thickness_annotate)
         try:
             w, h, loc = getCrop(imgFile, templateFile, 0.8)
         except TypeError:
