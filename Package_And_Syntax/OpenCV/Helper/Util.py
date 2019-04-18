@@ -3,7 +3,7 @@ import yaml
 import numpy as np
 import os
 import fnmatch
-from GTframe import GTFrame
+from Helper.GTFrame import GTFrame
 
 
 def getBB(yml):
