@@ -1,6 +1,6 @@
 import unittest
 
-from my_sum import sum
+from my_sum.sumFunc import sum2
 
 class TestSum(unittest.TestCase):
 
@@ -10,7 +10,7 @@ class TestSum(unittest.TestCase):
         :return:
         """
         data = [1,2,3]
-        result = sum(data)
+        result = sum2(data)
         self.assertEqual(result, 6)
 
 
