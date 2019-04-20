@@ -5,16 +5,12 @@ def pascal_triangle( line_number ):
     :return: coefficients on the given line
     """
     result_list = list()
-    result_list.append(1)
-    i = 1
-    while(i <=line_number):
+    if (line_number < 0):
+        return result_list
+    for i in range(line_number + 1):
+        result_list.insert(0,1)
         j = 1
-        l = []
-        l.append(1)
-        while(j < i):
-            l.append(result_list[i-1][j] + result_list[i-1][j-1])
-            j +=1
-        l.append(1)
-        result_list.append(l)
-        i+=1
+        while (j < len(result_list) - 1):
+            result_list[j] = result_list[j] + result_list[j+1]
+            j+=1
     return result_list
