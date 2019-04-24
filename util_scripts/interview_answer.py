@@ -43,10 +43,34 @@ def Q2(words):
     return word, count
 
 
+# Q3 -
+# Q4 - Design a Class DataFrameDemo
+class DataFrameDemo:
+    # data should be a dictionary, all its keys should be strings, values should be lists of the same length
+    # for exmaple, data = {"name": ["Jeff", "Emma", "Mike", "Jo"], "age": [21, 19, 22, 20], "enrolled": [false, true, true, false]}
+    def __init__(self, data):
+        self._check_input_type(data)
+        self._check_input_length(data)
+        self._data = data
 
-# Q4 - Design a Class
-#   __init__(self, data):
-#      _check_
+    def _check_input_type(self, data):
+        if not isinstance(data, dict):
+            raise TypeError("data must be a dictionary")
+        for col_name, values in data.items():
+            if not isinstance(col_name, str):
+                raise TypeError("all columns must be strings")
+            if not isinstance(values, list):
+                raise TypeError()
+
+
+    def _check_input_length(self, data):
+        pass
+
+
+    def columns(self):
+        pass
+
+
 
 
 ###################################################################
