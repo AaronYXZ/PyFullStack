@@ -152,6 +152,14 @@ class NoiseAdd:
             if num_of_files == 0:
                 break
 
+    def _diff_pos(self):
+        perc = self._dicts["expand"]
+        num_of_files = max(1, int(perc * len(self._files)))
+        for file in self._files:
+            full_file = os.path.join(self._inpath, file)
+            with open(full_file) as tmp:
+                soup = BeautifulSoup(tmp)
+
 
 if __name__ == '__main__':
     inpath = "/Users/aaronyu/Desktop/Project15_DiagnosticTool/practice_data/train"
