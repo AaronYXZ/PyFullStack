@@ -191,7 +191,7 @@ class NoiseAdd:
             # if # modified files reached pre-defined limit, stop this process and proceed to next process
             if num_of_files == 0:
                 break
-
+        ## Shrink by token. only applicaple to multi-token fields
     def _shrink_tag(self, n):
         perc = self._dicts["shrink"]
         num_of_files = max(1, int(perc * self._file_num))
@@ -220,7 +220,7 @@ class NoiseAdd:
             num_of_files -= 1
             if num_of_files == 0:
                 break
-
+        ## ToDo expand by token
     def _expand_tag(self):
         """
 
@@ -274,6 +274,7 @@ class NoiseAdd:
             if num_of_files == 0:
                 break
 
+    ## ToDo random pick a text and put tag around it
     def _random_tag(self):
         perc = self._dicts["random"]
         num_of_files = max(1, int(perc * self._file_num))
