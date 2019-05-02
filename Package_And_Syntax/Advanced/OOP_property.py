@@ -26,7 +26,7 @@ if __name__ == '__main__':
     student = Student("a", 99)
     print(student._name)
     print(student.name)
-    student._score = 15
-    print(student._score)
+    student._score = 15.0
     print(student.score)
-    # student.score = 10.0
+    student.score = 10.0
+    print(student._score)

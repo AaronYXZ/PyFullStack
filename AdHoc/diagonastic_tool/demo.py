@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-
+from noise_add import NoiseAdd
 
 
 def shrink(html, field, num, **kwargs):
@@ -53,8 +53,9 @@ def diff_pos(html, field):
 
 if __name__ == '__main__':
     html = "resources/diff_pos.html"
-    field = "total_amount"
+    field = "invoice_number"
     # field = "invoice_number"
-    expand(html, field)
+    # runner = NoiseAdd(inpath, outpath, field)
+    # runner.add_noise()
 
 
