@@ -22,6 +22,9 @@ class NoiseAdd:
         self._file_num = len(self._files)
         self._swap_map = {"invoice_number": "po_number", "invoice_total_amount": "total_price",
                           "vendor_name": "bill_to"}
+        self._tokenizer = "\s+"
+        # String defaultTokenizerRegexp = "(([\\s:#_;'\\ǀ\"\\|\\[\\]\\(\\)\\*•■])|(\\s,)|(\\s-)|(\\.\\s))"
+
 
     def _collect_htmls(self, path, field):
         """
@@ -191,8 +194,47 @@ class NoiseAdd:
             # if # modified files reached pre-defined limit, stop this process and proceed to next process
             if num_of_files == 0:
                 break
-        ## Shrink by token. only applicaple to multi-token fields
+    ##  ToDo Shrink by token. only applicaple to multi-token fields
     def _shrink_tag(self, n):
+        """
+
+        :param n: number of tokens to be dropped in order to shrink the field, should be an integer from 1 to len(field) -1
+
+        :return: modify the html tags in place
+        """
+        perc = self._dicts["shrink"]
+        num_of_files = max(1, int(perc * self._file_num))
+        for file in self._files:
+            full_file = os.path.join(self._inpath, file)
+            with open(full_file) as tmp:
+                soup = BeautifulSoup(tmp)
+            tag = soup.find(self._field)
+            ptag = tag.find_parent()
+            while ptag.name != "line":
+                ptag = ptag.find_parent()
+            ori_string = tag.string
+            pattern = re.compile(self._tokenizer)
+            tokens = ori_string.split(pattern, ori_string)
+            other_string = tokens[-n]
+            end_index = ori_string.rfind(other_string) ## reverse find to get the index of last occuracne of found token
+            shrinked_string = ori_string[:end_index] ## shrinked string
+            tag.string = shrinked_string
+            tag['data-value'] = shrinked_string
+            app_tag = soup.new_tag("formatting")
+            app_tag.string = other_string
+            ptag.append(app_tag)
+            html = soup.prettify("utf-8")
+            outfile = os.path.join(self._outpath, file)
+            with open(outfile, "wb") as tmp:
+                tmp.write(html)
+            self._files.remove(file)
+            self._metadata['shrink'].add(file)
+            num_of_files -= 1
+            if num_of_files == 0:
+                break
+
+    ## shrink by character, n is the number of character
+    def _shrink_tag_by_char(self, n):
         perc = self._dicts["shrink"]
         num_of_files = max(1, int(perc * self._file_num))
         for file in self._files:
