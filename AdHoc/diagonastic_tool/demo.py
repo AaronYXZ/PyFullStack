@@ -1,61 +1,25 @@
-from bs4 import BeautifulSoup
 from noise_add import NoiseAdd
 
-
-def shrink(html, field, num, **kwargs):
-    with open(html) as tmp:
-        soup = BeautifulSoup(tmp, "html.parser")
-    tag = soup.find(field)
-    string = tag.string
-
-    shrinked_string = string
-
-
-def expand(html, field):
-    with open(html) as tmp:
-        soup = BeautifulSoup(tmp, "html.parser")
-    tag = soup.find(field)
-    ptag = tag.find_parent()
-    while ptag.name != "line":
-        ptag = ptag.find_parent()
-    attributes = tag.attrs
-    expanded_string = ptag.text.strip()
-    tag.string =expanded_string
-    for k, v in attributes.items():
-        if k == "data-value":
-            tag[k] = expanded_string
-        else:
-            tag[k] = v
-    print("test")
-    html = soup.prettify("utf-8")
-    with open("resources/output.html", "wb") as file:
-        file.write(html)
-def diff_pos(html, field):
-    with open(html) as tmp:
-        soup = BeautifulSoup(tmp, "html.parser")
-    tag = soup.find(field)
-    ptag = tag.find_parent()
-    while ptag.name != "line":
-        ptag = ptag.find_parent()
-    attributes = tag.attrs
-    expanded_string = ptag.text.strip()
-    tag.string =expanded_string
-    for k, v in attributes.items():
-        if k == "data-value":
-            tag[k] = expanded_string
-        else:
-            tag[k] = v
-    print("test")
-    html = soup.prettify("utf-8")
-    with open("resources/output.html", "wb") as file:
-        file.write(html)
-
-
 if __name__ == '__main__':
-    html = "resources/diff_pos.html"
+
+    inpath = "/Users/aaronyu/Desktop/Project15_DiagnosticTool/data-quality-data_HPE"
+    outpath = "/Users/aaronyu/Desktop/Project15_DiagnosticTool/HPE_output"
+
     field = "invoice_number"
-    # field = "invoice_number"
+
+## use case 1: default
+
+    # pass 3 arguments to the constructur: input path, output path, field to be modified. will use default
     # runner = NoiseAdd(inpath, outpath, field)
+    # call add_noise method on NoiseAdd instance
     # runner.add_noise()
+    # retrieve results from the specified output path
+
+## use case 2: specify noise types
+    runner = NoiseAdd(inpath, outpath, field)
+    runner.dicts = {"shrink": 0.3, "expand": 0.2, "random": 0.05}
+    runner.add_noise()
+
+
 
 

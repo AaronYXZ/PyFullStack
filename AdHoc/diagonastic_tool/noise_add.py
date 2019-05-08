@@ -48,10 +48,14 @@ class NoiseAdd:
         return files
 
 
-    def get_metadata(self, type="csv", name="change_log"):
+    def get_metadata(self, type="csv", name="change_log", path = "."):
         """
 
-        :return: csv two columns, file name + type of change
+        :param type: type  of the output file, by default is csv
+        :param name: name of the output file
+        :param path: path of the output file
+        :return: save the change log to user specified path, by default it's a 2-column csv,
+        first column being name of html, second colunn being type of changed made on that html
         """
         types = ['csv']
         meta = []
@@ -59,7 +63,7 @@ class NoiseAdd:
             for v in vs:
                 meta.append({"type": k, "file": v})
         if type == "csv":
-            pd.DataFrame(meta).to_csv(self._field + name + ".csv", index=None)
+            pd.DataFrame(meta).to_csv(os.path.join(path, self._field + "_" + name + ".csv"), index=None)
         else:
             raise TypeError("type must be one of the followings: ".format(types))
 
@@ -72,7 +76,7 @@ class NoiseAdd:
     def dicts(self, dicts):
         types = {"shrink", "expand", "random", "swap", "diff_pos"}
         total = 0.0
-        for k, v in dicts:
+        for k, v in dicts.items():
             if not isinstance(k, str):
                 raise TypeError("key of the dictionary must be a string")
             if not isinstance(v, float):
@@ -95,14 +99,21 @@ class NoiseAdd:
         self._swap_map = dict
 
     def add_noise(self):
-        # self._swap_tag()
-        # self._diff_pos_tag()
+        self._swap_tag()
+        self._diff_pos_tag()
         self._expand_tag()
-        # self._shrink_tag(1)
-        # self._random_tag()
+        self._shrink_tag(1)
+        self._random_tag()
 
     def _swap_tag(self):
-        perc = self._dicts["swap"]
+        print("--------------------------------------------------------------")
+        print("Working on swaping tags")
+
+        try:
+            perc = self._dicts["swap"]
+        except KeyError:
+            print("No percentage set for {}, skip this part".format("") )
+            return
         try:
             swap_to = self._swap_map[self._field]
         except KeyError:
@@ -110,6 +121,8 @@ class NoiseAdd:
             return
 
         num_of_files = max(1, int(perc * self._file_num))  # use fixed # of files
+
+
         for file in self._files:
             full_file = os.path.join(self._inpath, file)
             with open(full_file) as tmp:
@@ -149,13 +162,21 @@ class NoiseAdd:
             # if # modified files reached pre-defined limit, stop this process and proceed to next process
             if num_of_files == 0:
                 break
+        print("Finished swapping tags")
 
     def _diff_pos_tag(self):
         """
 
         :return: find the exact match of current filed's text, untag the current field and tag the match in place
         """
-        perc = self._dicts["diff_pos"]
+        print("--------------------------------------------------------------")
+        print("Working on different position tags")
+
+        try:
+            perc = self._dicts["diff_pos"]
+        except KeyError:
+            print("No percentage set for diff_pos")
+            return
         num_of_files = max(1, int(perc * self._file_num))
         for file in self._files:
             full_file = os.path.join(self._inpath, file)
@@ -212,6 +233,9 @@ class NoiseAdd:
             # if # modified files reached pre-defined limit, stop this process and proceed to next process
             if num_of_files == 0:
                 break
+
+        print("Finished different position tags")
+
     def _shrink_tag(self, n):
         """
 
@@ -219,7 +243,14 @@ class NoiseAdd:
 
         :return: modify the html tags in place
         """
-        perc = self._dicts["shrink"]
+        print("--------------------------------------------------------------")
+        print("Working on shrinking tags")
+
+        try:
+            perc = self._dicts["shrink"]
+        except KeyError:
+            print("No percentage is set for shrink")
+            return
         num_of_files = max(1, int(perc * self._file_num))
         for file in self._files:
             full_file = os.path.join(self._inpath, file)
@@ -263,9 +294,15 @@ class NoiseAdd:
             num_of_files -= 1
             if num_of_files == 0:
                 break
+        print("Finished shrinking tags")
 
     ## shrink by character, n is the number of character
     def _shrink_tag_by_char(self, n):
+
+        print("--------------------------------------------------------------")
+        print("Working on shrinking tags by character")
+
+
         perc = self._dicts["shrink"]
         num_of_files = max(1, int(perc * self._file_num))
         for file in self._files:
@@ -297,6 +334,10 @@ class NoiseAdd:
 
         :return: modify html inplace, expand the field tag to whole line
         """
+
+        print("--------------------------------------------------------------")
+        print("Working on expanding tags")
+
         perc = self._dicts["expand"]
         num_of_files = max(1, int(perc * self._file_num))
         for file in self._files:
@@ -346,8 +387,13 @@ class NoiseAdd:
             if num_of_files == 0:
                 break
 
+        print("Finished expanding tags")
+
     ## ToDo random pick a text and put tag around it
     def _random_tag(self):
+        print("--------------------------------------------------------------")
+        print("Working on randomly creating tags")
+
         perc = self._dicts["random"]
         num_of_files = max(1, int(perc * self._file_num))
         for file in self._files:
@@ -391,19 +437,6 @@ class NoiseAdd:
             # if # modified files reached pre-defined limit, stop this process and proceed to next process
             if num_of_files == 0:
                 break
+        print("Finished randomly creating tags")
 
-if __name__ == '__main__':
-    test = False
-    if test:
-        inpath = "resources/sample"
-        outpath = "resources/output"
-    else:
-        inpath = "/Users/aaronyu/Desktop/Project15_DiagnosticTool/data-quality-data_HPE"
-        outpath = "/Users/aaronyu/Desktop/Project15_DiagnosticTool/HPE_output"
 
-    field = "vendor_name"
-    # if os.path.exists(inpath):
-    #     os.removedirs(inpath)
-    runner = NoiseAdd(inpath, outpath, field)
-    runner.add_noise()
-    runner.get_metadata()
