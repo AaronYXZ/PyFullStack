@@ -96,7 +96,8 @@ class NoiseAdd:
 
     @swap_map.setter
     def swap_map(self, dict):
-        self._swap_map = dict
+        for k, v in dict.items():
+            self._swap_map[k] = v
 
     def add_noise(self):
         self._swap_tag()
@@ -112,7 +113,7 @@ class NoiseAdd:
         try:
             perc = self._dicts["swap"]
         except KeyError:
-            print("No percentage set for {}, skip this part".format("") )
+            print("No percentage set for swap, skip this part")
             return
         try:
             swap_to = self._swap_map[self._field]
@@ -175,7 +176,7 @@ class NoiseAdd:
         try:
             perc = self._dicts["diff_pos"]
         except KeyError:
-            print("No percentage set for diff_pos")
+            print("No percentage set for diff_pos, skip this part")
             return
         num_of_files = max(1, int(perc * self._file_num))
         for file in self._files:
@@ -249,7 +250,7 @@ class NoiseAdd:
         try:
             perc = self._dicts["shrink"]
         except KeyError:
-            print("No percentage is set for shrink")
+            print("No percentage is set for shrink, skip this part")
             return
         num_of_files = max(1, int(perc * self._file_num))
         for file in self._files:
@@ -328,7 +329,7 @@ class NoiseAdd:
             num_of_files -= 1
             if num_of_files == 0:
                 break
-        ## ToDo expand by token
+        ## ToDo expand by token, currently expand to cover whole line
     def _expand_tag(self):
         """
 
@@ -338,7 +339,11 @@ class NoiseAdd:
         print("--------------------------------------------------------------")
         print("Working on expanding tags")
 
-        perc = self._dicts["expand"]
+        try:
+            perc = self._dicts["expand"]
+        except KeyError:
+            print("No percentage is set for expand, skip this part")
+            return
         num_of_files = max(1, int(perc * self._file_num))
         for file in self._files:
             full_file = os.path.join(self._inpath, file)
@@ -393,8 +398,11 @@ class NoiseAdd:
     def _random_tag(self):
         print("--------------------------------------------------------------")
         print("Working on randomly creating tags")
-
-        perc = self._dicts["random"]
+        try:
+            perc = self._dicts["random"]
+        except KeyError:
+            print("No percentage is set for random, skip this part")
+            return
         num_of_files = max(1, int(perc * self._file_num))
         for file in self._files:
             full_file = os.path.join(self._inpath, file)
