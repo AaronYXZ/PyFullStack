@@ -1,5 +1,5 @@
 import unittest
-from Student import Student
+from .Student import Student
 
 class TestStudent(unittest.TestCase):
     def test_80_to_100(self):
@@ -12,7 +12,7 @@ class TestStudent(unittest.TestCase):
         s1 = Student('Bart', 60)
         s2 = Student('Lisa', 79)
         self.assertEqual(s1.get_grade(), 'B')
-        self.assertEqual(s2.get_grade(), 'B')
+        self.assertEqual(s2.grade, 'B')
 
     def test_0_to_60(self):
         s1 = Student('Bart', 0)
