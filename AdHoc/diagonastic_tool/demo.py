@@ -1,5 +1,14 @@
 from noise_add import NoiseAdd
 
+def diff_pos(html, field):
+    with open(html) as tmp:
+        soup = BeautifulSoup(tmp, "html.parser")
+    tag = soup.find(field)
+    ptag = tag.find_parent()
+    while ptag.name != "line":
+        ptag = ptag.find_parent()
+    attributes = tag.attrs
+
 if __name__ == '__main__':
 
     inpath = "/Users/aaronyu/Desktop/Project15_DiagnosticTool/data-quality-data_HPE"
