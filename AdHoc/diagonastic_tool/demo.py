@@ -31,6 +31,15 @@ def expand(html, field):
     with open("resources/output.html", "wb") as file:
         file.write(html)
 
+def diff_pos(html, field):
+    with open(html) as tmp:
+        soup = BeautifulSoup(tmp, "html.parser")
+    tag = soup.find(field)
+    ptag = tag.find_parent()
+    while ptag.name != "line":
+        ptag = ptag.find_parent()
+    attributes = tag.attrs
+
 if __name__ == '__main__':
     html = "resources/expand2.html"
     field = "invoice_number"
