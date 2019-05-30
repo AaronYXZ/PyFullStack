@@ -16,7 +16,8 @@ def say_whee():
 def say_whee_decorated():
     print("Whee!!!")
 if __name__ == '__main__':
-    decorated = my_decorator(say_whee)
 
+    decorated = my_decorator(say_whee)
     decorated()
+
     say_whee_decorated()
