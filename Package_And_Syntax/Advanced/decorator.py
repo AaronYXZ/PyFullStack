@@ -19,12 +19,19 @@ def say_whee_decorated():
 def do_twice(func):
     def wrapper_do_twice(*args, **kwargs):
         func(*args, **kwargs)
-        func(*args, **kwargs)
+        # func(*args, **kwargs)
+        return func(*args, **kwargs)
     return wrapper_do_twice
 
 @do_twice
 def say_whee_twice(word):
     print(word)
+
+
+@do_twice
+def try_return(name):
+    print("Whee!!!")
+    return name
 
 if __name__ == '__main__':
 
@@ -34,5 +41,7 @@ if __name__ == '__main__':
 ## Syntactic Sugar!
     say_whee_decorated() ## identical to my_decorator(say_whee)
 
-##
-    say_whee_twice("Whee!!!")
+## return value from decorated functions
+    # say_whee_twice("Whee!!!")
+    GOAT = try_return("Messi")
+    print(GOAT)
