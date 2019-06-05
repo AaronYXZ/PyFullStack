@@ -35,7 +35,7 @@ if __name__ == '__main__':
     student1.go_to_school()
     Student.go_to_school_static()
     Student.go_to_school_cls()
-    player_one = LotteryPlayer("Jeff")
+    # player_one = LotteryPlayer("Jeff")
     # player_one.numbers = (1,2,3)
     # print(player_one.total())
     # player_one.name = "Bill"
