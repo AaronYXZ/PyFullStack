@@ -33,7 +33,12 @@ class test_iterable_iterator(unittest.TestCase):
         self.assertTrue(isinstance(dic, Iterable))
 
     def test_iterator_1(self):
-        pass
+        """
+        create an Iterator from iter(Iterable)
+        """
+        ite = iter(lst)
+        self.assertTrue(isinstance(ite, Iterator))
 
 
 unittest.main()
+
