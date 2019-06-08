@@ -17,7 +17,7 @@ class test_iterator_generator(unittest.TestCase):
     def test_generator(self):
         g = generator_count_down(5)
         self.assertTrue(isinstance(g, Generator))
-        g2 = (x for x in range(5))
+        g2 = (x for x in range(5) if x % 2 == 0)
         self.assertTrue(isinstance(g2, Generator))
 
 if __name__ == '__main__':
