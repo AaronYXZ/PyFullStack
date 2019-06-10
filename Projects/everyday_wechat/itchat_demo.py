@@ -1,21 +1,25 @@
 import itchat
+from collections.abc import Iterable
+import time, random
 
 itchat.auto_login(hotReload=True)
 
 # 注意实验楼环境的中文输入切换
-itchat.send(u'测试消息发送', 'filehelper')
-itchat.send(u'测试消息发送', "Kelly")
-itchat.send(u'测试消息发送', "Kelly_zxy22")
-itchat.send(u'测试消息发送', "Lucifer")
-friend_list = itchat.get_friends()[1:]
-friend = friend_list[0]
-if friend['NickName'] == "Kelly":
-    itchat.send(u"测试 晚安宝贝❤️", friend['UserName'])
-print("test")
+friend_list = itchat.get_friends()
+# print(isinstance(friend_list, Iterable))
+# print(hasattr(friend_list, '__iter__'))
+itchat.send("a", "filehelper")
+for i, friend in enumerate(friend_list):
+    if friend["NickName"] == "鹿游原":
+        itchat.send("test", friend["UserName"])
+
+    # if i > 10:
+    #     break
+    # if friend['NickName'] == "test":
+    #     print("has test")
+    #     itchat.send(u"测试️", friend['UserName'])
+    # elif friend["NickName"] == "Lucifer":
+    #     print("has luc")
+    #     itchat.send("haha", friend['UserName'])
 
 
-# @itchat.msg_register(itchat.content.TEXT)
-# def text_reply(msg):
-#     return msg.text
-#
-# itchat.run()
