@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/PyFullStack.iml" filepath="$PROJECT_DIR$/.idea/PyFullStack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../udemy_ml_deploy/.idea/udemy_ml_deploy.iml" filepath="$PROJECT_DIR$/../udemy_ml_deploy/.idea/udemy_ml_deploy.iml" />
     </modules>
   </component>
 </project>
