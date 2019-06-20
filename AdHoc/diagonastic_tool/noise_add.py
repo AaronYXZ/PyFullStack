@@ -1,6 +1,6 @@
 import os
 import random
-import numpy as np
+import shutil
 import pandas as pd
 from collections import defaultdict
 from bs4 import BeautifulSoup
@@ -27,9 +27,13 @@ class NoiseAdd:
         self._metadata = defaultdict(set)
         self._files = self._collect_htmls(inpath, field)
         self._file_num = len(self._files)
-        self._swap_map = {"invoice_number": "invoice_order_number", "vendor_name": "bill_to_name"}
-        self._tokenizer = "\s+"
+        self._swap_map = {"invoice_number": "invoice_order_number", "vendor_name": "bill_to_name", "bill_to_name": "vendor_name"}
+        self._tokenizer = "[\s+\.\,\-\|\*•■;_:]+"
         # String defaultTokenizerRegexp = "(([\\s:#_;'\\ǀ\"\\|\\[\\]\\(\\)\\*•■])|(\\s,)|(\\s-)|(\\.\\s))"
+        if os.path.exists(outpath):
+            shutil.rmtree(outpath)
+        os.mkdir(outpath)
+
 
     def _collect_htmls(self, path, field):
         """
@@ -48,7 +52,7 @@ class NoiseAdd:
         return files
 
 
-    def get_metadata(self, type="csv", name="change_log", path = "."):
+    def get_metadata(self, type="csv", name="change_log", path = "./resources/metadata/"):
         """
 
         :param type: type  of the output file, by default is csv
@@ -128,29 +132,38 @@ class NoiseAdd:
             full_file = os.path.join(self._inpath, file)
             with open(full_file) as tmp:
                 soup = BeautifulSoup(tmp, "html.parser")
-            swap_to_tag = soup.find(swap_to)
-            if swap_to_tag == None:
+            swap_to_tags = soup.findAll(swap_to)
+
+            if swap_to_tags == None:
                 continue
-            swap_to_attributes = swap_to_tag.attrs.copy()
+            try:
+                swap_to_attributes = swap_to_tags[0].attrs.copy() ## get copy of swap_to tag attributes, say bill_to_names
+            except:
+                continue
 
-            tag = soup.find(self._field)  ## find the tag associated with the working field, say invoice_number
-            attributes = tag.attrs  ## get all attributes of the tag, such as class, data-value, style
-            ptag = tag.find_parent()  ## find the parent line tag
-            while ptag.name != "line":
-                ptag = ptag.find_parent()
+            tags = soup.findAll(self._field) ## find the tag associated with the working field, say vendor_name
+            attributes = tags[0].attrs.copy()## get all attributes of the tag, such as class, data-value, style
 
-            swap_to_tag.name = self._field
-            for k, v in attributes.items():
-                if k == "data-value":
-                    pass
-                else:
-                    swap_to_tag[k] = v
-            tag.name = swap_to
-            for k, v in swap_to_attributes.items():
-                if k == "data-value":
-                    pass
-                else:
-                    tag[k] = v
+            ## to cover cases where one tag has multiple parts:
+            ## field vendor_name, has <vendor_name>ABC COMPANY</vendor_name> <vendor_name>LTD</vendor_name>
+
+            for swap_to_tag in swap_to_tags:
+                swap_to_tag.name = self._field
+                for k, v in attributes.items():
+                    if k == "data-value":
+                        pass
+                    else:
+                        swap_to_tag[k] = v
+            for tag in tags:
+                ptag = tag.find_parent()  ## find the parent line tag
+                while ptag.name != "line":
+                    ptag = ptag.find_parent()
+                tag.name = swap_to
+                for k, v in swap_to_attributes.items():
+                    if k == "data-value":
+                        pass
+                    else:
+                        tag[k] = v
             html = soup.prettify("utf-8")
             outfile = os.path.join(self._outpath, file)
             with open(outfile, "wb") as tmp:
@@ -176,7 +189,7 @@ class NoiseAdd:
         try:
             perc = self._dicts["diff_pos"]
         except KeyError:
-            print("No percentage set for diff_pos, skip this part")
+            print("No percentage is set for diff_pos, skip this part")
             return
         num_of_files = max(1, int(perc * self._file_num))
         for file in self._files:
@@ -191,8 +204,14 @@ class NoiseAdd:
 
             ori_string = tag.string
             if ori_string == None:
-                ori_string = tag.find("formatting").string
-            template = re.compile("\s*" + ori_string + "\s*")
+                try:
+                    ori_string = tag.find("formatting").string
+                except:
+                    continue
+            try:
+                template = re.compile(".*[\s\.\,\-]+" + ori_string + "[\s\.\,\-]?.*", re.IGNORECASE)
+            except:
+                continue
             candidate_tags = soup.findAll("formatting", text=template)  # find all <formatting> tag
             if len(candidate_tags) == 0:
                 continue
@@ -204,11 +223,15 @@ class NoiseAdd:
                     break
             # pick a random tag to modify from all candidate tags
             if candidate == None:
-                break
+                continue
             # match ori string to candidate string to get begin and end index
             # candidate string is divided to 3 parts: :begin, begin:end (the ori_string to be covered), end:
             candidate_string = candidate.string
-            begin = candidate_string.index(ori_string)
+            try:
+                begin = candidate_string.lower().index(ori_string.lower())
+            except:
+                continue
+                # print(file)
             end = begin + len(ori_string)
             begin_string = candidate_string[:begin]
             end_string = candidate_string[end:]
@@ -274,13 +297,16 @@ class NoiseAdd:
             if len(tokens) < 2:
                 continue
             other_string = tokens[-n]
+            other_tag = soup.new_tag("formatting")
+            other_tag['lang'] = "EnglishUnitedStates"
+            other_tag.string = other_string
             end_index = ori_string.rfind(other_string) ## reverse find to get the index of last occuracne of found token
             shrinked_string = ori_string[:end_index] ## shrinked string
 
             if ftag == None:
                 tag.string = shrinked_string
                 tag['data-value'] = shrinked_string
-                ptag.append(other_string)
+                ptag.append(other_tag)
             else:
                 ftag.string = shrinked_string
                 tag['data-value'] = shrinked_string
@@ -372,9 +398,14 @@ class NoiseAdd:
                     new_tag[k] = expanded_string
                 else:
                     new_tag[k] = v
+            format_tag = soup.new_tag("formatting")
+
+            format_tag['lang'] = "EnglishUnitedStates"
+            # format_tag.wrap(new_tag)
 
             if stag == None:
                 ptag.string.wrap(new_tag)
+                new_tag.wrap(format_tag)
             else:
                 stag.wrap(new_tag)
 
