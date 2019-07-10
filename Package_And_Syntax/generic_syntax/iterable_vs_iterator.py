@@ -6,6 +6,11 @@ lst = [1,2,3]
 st = (1,2,3)
 dic = {"a": 1, "b":2}
 
+"""
+check generic syntax - iterable vs iterator 
+Iterable is an object that has an __iter__ method which returns an Iterator, or which defines a __getitem__ method
+Iterator is an object that with __next__ method
+"""
 class test_iterable_iterator(unittest.TestCase):
     def test_iterable_iterator(self):
         """
