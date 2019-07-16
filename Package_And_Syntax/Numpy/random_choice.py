@@ -23,7 +23,28 @@ samples : single item or ndarray
 The generated random samples
 """
 
-np.random.choice(5,3)
+# generate a uniform random sample from np.aragne(5) of size 3
+arr1 = np.random.choice(5,3)
+assert isinstance(arr1, np.ndarray)
 # >>> #This is equivalent to np.random.randint(0,5,3)
 
+# generate a non-uniform random sample
+np.random.seed(123)
+arr2 = np.random.choice(5, 3, p=[0.1, 0, 0.3, 0.6, 0])
 
+# this is equivalent to list of [0,1,2,3,4]
+np.random.seed(123)
+arr3 = np.random.choice([0,1,2,3,4], 3, p=[0.1, 0, 0.3, 0.6, 0])
+
+np.testing.assert_array_equal(arr2, arr3)
+
+
+# generate a uniform random sample from np.arange(5) of size 3 without replacement:
+
+np.random.choice(5, 3, replace=False)
+
+# Any of the above can be repeated with an arbitrary array-like instead of just integers. For instance:
+aa_milne_arr = ['pooh', 'rabbit', 'piglet', 'Christopher']
+arr_str = np.random.choice(aa_milne_arr, 5, p=[0.5, 0.1, 0.1, 0.3])
+assert isinstance(arr_str, np.ndarray)
+assert arr_str.dtype == "<U11"
