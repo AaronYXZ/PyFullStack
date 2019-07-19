@@ -1,5 +1,9 @@
 import torch
 
+"""
+manually implement both the forward and backward passes without using tensor's autograd
+"""
+
 dtype = torch.float
 device = torch.device("cpu")
 
