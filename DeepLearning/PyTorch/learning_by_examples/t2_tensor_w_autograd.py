@@ -29,16 +29,17 @@ w2 = torch.randn(H, D_out, device=device, dtype=dtype, requires_grad=True)
 
 learning_rate = 1e-6
 for t in range(5000):
-    y_pred = x.mm(w1).relu(min = 0).mm(w2)
+    y_pred = x.mm(w1).clamp(min = 0).mm(w2)
     loss = (y_pred - y).pow(2).sum()
     print(t, loss.item())
 
-    # Use autograd to compute the backward pass. This call will compute the
-    # gradient of loss with respect to all Tensors with requires_grad=True.
-    # After this call w1.grad and w2.grad will be Tensors holding the gradient
-    # of the loss with respect to w1 and w2 respectively.
+    """
+    Use autograd to compute the backward pass. This call will compute the
+    gradient of loss with respect to all Tensors with requires_grad=True.
+    After this call w1.grad and w2.grad will be Tensors holding the gradient
+    of the loss with respect to w1 and w2 respectively.
+    """
     loss.backward()
-
     # Manually update weights using gradient descent. Wrap in torch.no_grad()
     # because weights have requires_grad=True, but we don't need to track this
     # in autograd.
