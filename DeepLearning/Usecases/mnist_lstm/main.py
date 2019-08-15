@@ -45,7 +45,7 @@ class RNN(nn.Module):
         super(RNN, self).__init__()
 
         self.rnn = nn.LSTM(
-            input_size=INPUT_SIZE,
+            input_size=INPUT_SIZE, # pixels per line
             hidden_size= 64,
             num_layers=1,
             batch_first=True
@@ -57,8 +57,12 @@ class RNN(nn.Module):
         # x shape (batch, time_step, input_size)
         # r_out shape (batch, time_step, output_size)
         # h_n shape (n_layers, batch, hidden_size) LSTM 有两个hidden states, h_n是分线， h_c是主线
-        r_out, (h_n, h_c) = self.rnn(x, None)
-        out = self.out(r_out[:, -1, :])         # 这里 r_out[:, -1, :] 的值也是 h_n 的值
+        # h_c shape (n_layers, batch, hidden_size)
+        r_out, (h_n, h_c) = self.rnn(x, None)  # None 表示 hidden state 会用全0的 state
+
+        # 选取最后一个时间点的 r_out 输出
+        # 这里 r_out[:, -1, :] 的值也是 h_n 的值
+        out = self.out(r_out[:, -1, :])
         return out
 
 rnn = RNN()
