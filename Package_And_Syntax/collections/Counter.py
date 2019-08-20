@@ -1,4 +1,5 @@
 from collections import Counter
+from collections.abc import Iterable, Iterator, Generator
 import unittest
 
 words = [
@@ -11,4 +12,4 @@ words = [
 top_three = Counter(words)
 
 top3 = top_three.most_common(3)
-assert isinstance()
+assert isinstance(top3, )
