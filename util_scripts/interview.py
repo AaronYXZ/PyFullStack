@@ -33,7 +33,7 @@ data = {"name": ["Eric", "Emma", "Ted", "Ashley"],
         "score": [95.0, 88.5, 72.0, 91.3]}
 # create a pandas DataFrame out of the dictionary
 
-# get the columns as a list
+# get the column names as a list
 
 # change the last column names to "final_score"
 

@@ -27,6 +27,7 @@ class TestStudent(unittest.TestCase):
             s1.get_grade()
         with self.assertRaises(ValueError):
             s2.get_grade()
+        self.assertRaises(ValueError, s1.get_grade())
 
 
 if __name__ == '__main__':

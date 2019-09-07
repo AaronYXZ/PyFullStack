@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/PyFullStack.iml" filepath="$PROJECT_DIR$/.idea/PyFullStack.iml" />
-      <module fileurl="file://$PROJECT_DIR$/pandas_cub/.idea/pandas_cub.iml" filepath="$PROJECT_DIR$/pandas_cub/.idea/pandas_cub.iml" />
     </modules>
   </component>
 </project>
