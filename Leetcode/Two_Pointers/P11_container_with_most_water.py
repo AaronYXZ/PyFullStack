@@ -3,3 +3,5 @@
 import unittest
 
 class Solution:
+    def p(self):
+        return
