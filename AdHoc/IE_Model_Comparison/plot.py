@@ -5,7 +5,7 @@ import os
 sns.set(font_scale=1.2)
 colors = sns.color_palette("husl")
 
-df = pd.read_csv("/Users/aaronyu/Desktop/Project16_IEmodel/Result/IE model summary by field.csv")
+df = pd.read_csv("/Users/aaronyu/Desktop/Project16_IEmodel/HPE_Result/IE model summary by field.csv")
 df_clean = df.dropna()
 # print(df_clean.head())
 
@@ -36,4 +36,4 @@ def barplot(result_df: pd.DataFrame, output_path: str):
     ax.figure.savefig(os.path.join(output_path, "F1.png"))
     # plt.show()
 
-barplot(df_clean, "/Users/aaronyu/Desktop/Project16_IEmodel/Result")
+barplot(df_clean, "/Users/aaronyu/Desktop/Project16_IEmodel/HPE_Result")
